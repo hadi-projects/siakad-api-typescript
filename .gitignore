@@ -5,7 +5,7 @@ public/storage/thumbnail/*
 
 
 # Logs
-logs
+src/log/
 *.log
 src/log/access.json
 npm-debug.log*
