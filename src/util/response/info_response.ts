@@ -3,7 +3,7 @@ import { Response } from "express";
 
 class InfoResponse {
 
-    static progress(res: Response) {
+    static progress(res: Response):Response {
         return res.json({
             code: 3001,
             status: "info",

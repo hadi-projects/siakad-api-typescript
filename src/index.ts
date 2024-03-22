@@ -1,15 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import router from './routes/routes'
 import Middleware from './middleware/middleware';
+import Routes from './routes/routes';
 dotenv.config();
 
 function main() {
   const app = express()
   const middleware = new Middleware()
+  // const routes = new Routes()
   
   app.use(middleware.check);
-  app.use(router);
+  app.use(Routes);
   app.set('trust proxy', 'loopback')
 
   app.listen(process.env.PORT, () => {

@@ -1,9 +1,13 @@
 public/storage/thumbnail/*
 # !public/storage/thumbnail/.gitignore
 
+.env
+
+
 # Logs
 logs
 *.log
+src/log/access.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -92,7 +96,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+build
 
 # Gatsby files
 .cache/
