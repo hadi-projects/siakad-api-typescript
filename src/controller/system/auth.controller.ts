@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import InfoResponse from './util/response/info_response'
+import InfoResponse from '../../util/response/info_response'
 
 export default class AuthController {
     login(req:Request, res:Response){     
