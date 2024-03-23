@@ -1,11 +1,41 @@
+import AccessModel from "./access.model"
+import UserModel from "./user.model"
+
 export default class LogModel {
-    private ip!:string
+    private ip:string
     private url!:string
     private method!:string
     private endpoint!:string
     private timestamp!:string
-    private header!:string
-    private body!:string
+    private header!:Object
+    private request_body!:string
+    private access!:AccessModel
+    private user!:UserModel
+
+    public getRequest_body(): string {
+        return this.request_body;
+    }
+
+    public setRequest_body(request_body: string): void {
+        this.request_body = request_body;
+    }
+
+    public getAccess(): AccessModel {
+        return this.access;
+    }
+
+    public setAccess(access: AccessModel): void {
+        this.access = access;
+    }
+
+    public getUser(): UserModel {
+        return this.user;
+    }
+
+    public setUser(user: UserModel): void {
+        this.user = user;
+    }
+
    
     public getUrl(): string {
         return this.url;
@@ -47,20 +77,11 @@ export default class LogModel {
         this.timestamp = timestamp;
     }
 
-    public getHeader(): string {
+    public getHeader(): Object {
         return this.header;
     }
 
-    public setHeader(header: string): void {
+    public setHeader(header: Object): void {
         this.header = header;
     }
-
-    public getBody(): string {
-        return this.body;
-    }
-
-    public setBody(body: string): void {
-        this.body = body;
-    }
-
 }

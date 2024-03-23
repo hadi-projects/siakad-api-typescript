@@ -1,4 +1,4 @@
-import { Action } from "../enum/action.enum"
+import Action from "../enum/action.enum"
 import RoleModel from "./role.model"
 import StatusModel from "./status.model"
 

@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "db:migrate": "ts-node src/database/migrations/migrate.ts",
+    "db:seed": "ts-node src/database/seeder/seeder.ts",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "test": "jest --watchAll --detectOpenHandles"
@@ -28,6 +30,7 @@
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "moment": "^2.29.4",
+    "mysql2": "^3.9.2",
     "winston": "^3.11.0"
   }
 }
