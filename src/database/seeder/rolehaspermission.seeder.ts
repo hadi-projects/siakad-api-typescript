@@ -146,7 +146,11 @@ export default class RoleHasPermissionSeeder {
         (1, 18, 4, '${this.datetime}', '${this.datetime}'), 
         (1, 18, 5, '${this.datetime}', '${this.datetime}'),
         (1, 18, 6, '${this.datetime}', '${this.datetime}'),
-        (1, 18, 7, '${this.datetime}', '${this.datetime}');
+        (1, 18, 7, '${this.datetime}', '${this.datetime}'),
+        
+        (5, 1, 10, '${this.datetime}', '${this.datetime}'), 
+        (5, 1, 11, '${this.datetime}', '${this.datetime}')
+        ;
     `)
             .then((value) => {
                 console.log(this.table_name + ' table seeding success ✅');

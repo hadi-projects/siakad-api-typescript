@@ -15,7 +15,8 @@ export default class RoleSeeder {
             ('root', '${this.datetime}', '${this.datetime}'),
             ('admin', '${this.datetime}', '${this.datetime}'),
             ('member', '${this.datetime}', '${this.datetime}'),
-            ('mahasiswa', '${this.datetime}', '${this.datetime}');
+            ('mahasiswa', '${this.datetime}', '${this.datetime}'),
+            ('auth', '${this.datetime}', '${this.datetime}');
         `)
         .then(()=>console.log(this.table_name + ' table seeding success ✅'))
         .catch((e)=>console.log(this.table_name + ' table seeding failed ❌'+e))
