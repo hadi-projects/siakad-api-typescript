@@ -10,7 +10,7 @@ import RoleModel from '../model/role.model'
 
 export default class AccessLogMiddleware {
 
-	static log(req: express.Request, res: express.Response, next: express.NextFunction) {
+	static log(req: express.Request, res: express.Response) {
 		const logger = new Logger()
 		const log_model = new LogModel()
 

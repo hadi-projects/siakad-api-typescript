@@ -7,8 +7,8 @@ dotenv.config();
 function main() {
   const app = express()
   const middleware = new Middleware()
-  // const routes = new Routes()
-  
+
+  app.use(express.json())
   app.use(middleware.check);
   app.use(Routes);
   app.set('trust proxy', 'loopback')

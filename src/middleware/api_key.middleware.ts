@@ -1,13 +1,12 @@
 import express from 'express'
-import FailedResponse from '../util/response/failed_response'
 
 
 export default class ApiKeyMiddleware {
-    check(req:express.Request, res:express.Response, next:express.NextFunction){
+    check(req:express.Request, res:express.Response){
         
-        if(req.url.includes('/ping')) return next()
+        if(req.url.includes('/ping')) return true
 
-        if(!req.headers["x-api-key"]) return FailedResponse.tokenFailed(res)
-        else next()
+        if(!req.headers["x-api-key"]) return false
+        else true
     }
 }

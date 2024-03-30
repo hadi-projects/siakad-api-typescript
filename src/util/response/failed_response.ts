@@ -198,6 +198,23 @@ static logicFailed(res: Response, token:string) {
         token:token
     })
 }
+
+static keyvalFailed(res: Response, token:string) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "keyval failed",
+        token:token
+    })
+}
+
+static userNotActive(res: Response) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "user is not active",
+    })
+}
 }
 
 export default FailedResponse
