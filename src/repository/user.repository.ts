@@ -56,4 +56,17 @@ export default class UserRepository {
             .catch((err) => this.error_logger.error({ message: err, system:"mysql" }))
         return status
     }
+    
+    async create_otp(user: UserModel) {
+        let status = false
+        await (await db).query<RowDataPacket[]>(UserQuery.create_token(user))
+            .then(([data, field]) => {
+                console.log(data);
+                const result = JSON.parse(JSON.stringify(data))
+                if (result.affectedRows == 0) status = false
+                else status = true
+            })
+            .catch((err) => this.error_logger.error({ message: err, system:"mysql" }))
+        return status
+    }
 }

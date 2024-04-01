@@ -12,6 +12,14 @@ class SuccessReponse {
             data: user
         })
     }
+    static generate2fa(res: Response, user:UserModel) {
+        return res.json({
+            code: 2000,
+            status: "success",
+            message: "generate 2fa success",
+            data: user
+        })
+    }
 }
 
 export default SuccessReponse

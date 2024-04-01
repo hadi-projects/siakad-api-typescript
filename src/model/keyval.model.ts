@@ -1,4 +1,4 @@
-export default class Keyval {
+export default class KeyVal {
         private key!:string
         private value!:string 
     
@@ -18,7 +18,7 @@ export default class Keyval {
             this.value = value;
         }
     
-        validate(keyval:Keyval):boolean{
+        validate(keyval:KeyVal):boolean{
             if(
                 keyval.getKey() == null || keyval.getKey() == undefined || keyval.getKey() == "" ||
                 keyval.getValue() == null || keyval.getValue() == undefined || keyval.getValue() == ""

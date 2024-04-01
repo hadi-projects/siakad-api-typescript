@@ -23,7 +23,7 @@ export default class PermissionSeeder {
             ('login', '${this.datetime}', '${this.datetime}'),
             ('logout', '${this.datetime}', '${this.datetime}'),
             ('ping', '${this.datetime}', '${this.datetime}'),
-            ('nonw', '${this.datetime}', '${this.datetime}');
+            ('none', '${this.datetime}', '${this.datetime}');
             `)
             .then(()=>console.log(this.table_name + ' table seeding success ✅'))
             .catch(()=>console.log(this.table_name + ' table seeding failed ❌'))

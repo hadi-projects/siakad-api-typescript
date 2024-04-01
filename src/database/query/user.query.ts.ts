@@ -29,8 +29,20 @@ export default class UserQuery {
     }
 
     static create_token(user:UserModel){
+        console.log(user);
+        
         return `
-        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())};
+        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())} 
+        WHERE id = ${d.escape(user.getId())};
+        `
+    }
+   
+    static create_otp(user:UserModel){
+        console.log(user);
+        
+        return `
+        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())} 
+        WHERE id = ${d.escape(user.getId())};
         `
     }
 
