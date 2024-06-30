@@ -7,12 +7,14 @@ import AccessModel from '../model/access.model'
 import Resource from '../enum/resources.enum'
 import Action from '../enum/action.enum'
 import RoleModel from '../model/role.model'
+import LoglRepository from '../repository/log.repository'
 
 export default class AccessLogMiddleware {
 
 	static log(req: express.Request, res: express.Response) {
 		const logger = new Logger()
 		const log_model = new LogModel()
+		const log_repository = new LoglRepository()
 
 		log_model.setIp('http://127.0.0.1')
 		log_model.setMethod(req.method)
@@ -26,7 +28,12 @@ export default class AccessLogMiddleware {
 		log_model.setAccess(this.access(req))
 
 
+		// save to json filw
 		logger.accesslLog().info(log_model)
+
+		// save to database
+		log_repository.store(log_model)
+
 	}
 
 	static user(req: express.Request) {
@@ -34,19 +41,12 @@ export default class AccessLogMiddleware {
 		const role_model = new RoleModel
 		const authorization = req.headers.authorization
 
-
 		if (!authorization) {
 			role_model.setName('auth')
 			user_model.setRole(role_model)
 			
 			return user_model
 		}
-
-		
-		
-
-
-
 
 		return user_model
 	}

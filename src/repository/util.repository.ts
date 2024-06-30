@@ -8,6 +8,4 @@ import { randomBytes } from 'crypto';
 export default class UtilRepository {
     logger = new Logger()
     error_logger = this.logger.errorLogger()
-
-   
 }
