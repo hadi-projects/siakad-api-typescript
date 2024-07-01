@@ -6,6 +6,7 @@ import UserModel from '../model/user.model';
 import RoleModel from '../model/role.model';
 import StatusModel from '../model/status.model';
 import UserQuery from '../database/query/user.query.ts';
+import { log } from 'console';
 
 export default class UserRepository {
     logger = new Logger()
@@ -45,21 +46,22 @@ export default class UserRepository {
     }
 
     async create_token(user: UserModel) {
+        
         let status = false
         await (await db).query<RowDataPacket[]>(UserQuery.create_token(user))
-            .then(([data, field]) => {
-                console.log(data);
-                const result = JSON.parse(JSON.stringify(data))
-                if (result.affectedRows == 0) status = false
-                else status = true
-            })
-            .catch((err) => this.error_logger.error({ message: err, system:"mysql" }))
+        .then(([data, field]) => {
+            console.log(data);
+            const result = JSON.parse(JSON.stringify(data))
+            if (result.affectedRows == 0) status = false
+            else status = true
+        })
+        .catch((err) => this.error_logger.error({ message: err, system:"mysql" }))
         return status
     }
     
     async create_otp(user: UserModel) {
         let status = false
-        await (await db).query<RowDataPacket[]>(UserQuery.create_token(user))
+        await (await db).query<RowDataPacket[]>(UserQuery.create_otp(user))
             .then(([data, field]) => {
                 console.log(data);
                 const result = JSON.parse(JSON.stringify(data))

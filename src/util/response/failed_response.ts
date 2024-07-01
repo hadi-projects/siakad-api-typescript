@@ -215,6 +215,14 @@ static userNotActive(res: Response) {
         message: "user is not active",
     })
 }
+
+static otpFailed(res: Response) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "otp code not valid",
+    })
+}
 }
 
 export default FailedResponse

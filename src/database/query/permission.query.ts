@@ -3,7 +3,6 @@ import PermissionRepositoryModel from '../../model/permissionrepository.model'
 
 export default class PermissionQuery {
     static index(permissions: PermissionRepositoryModel) {
-        console.log(permissions);
         
         return `
         SELECT 

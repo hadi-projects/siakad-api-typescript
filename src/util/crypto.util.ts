@@ -4,6 +4,7 @@ const _2fa = require("node-2fa");
 const aesEcb = require('aes-ecb');
 const crypto = require('crypto')
 import dotenv from 'dotenv';
+import { log } from 'console';
 dotenv.config();
 
 
@@ -26,10 +27,10 @@ export default class CryptoUtil {
 
     }
 
-    static hashedOtp(account:any):any {
+    static generateOtp(account:any):any {
         let secret = _2fa.generateSecret({ name: process.env.APP_NAME, account: account})
         return {
-            secret: this.encryptSecret(secret.secret),
+            secret: secret.secret,
             uri: secret.uri
         }
     }
@@ -47,12 +48,22 @@ export default class CryptoUtil {
     }
     
     static encryptSecret(secret:string):any{
+
+        console.log('-=-=--=');
+        console.log(secret);
+        console.log('-=-=--=');
+        
     
         let key = new Buffer("8CBDEC62EB4DCA778F842B02503011B2" as string, 'hex')
         let cipher = crypto.createCipheriv("aes-128-ecb", key, null)
         cipher.setAutoPadding(false)
         let result = cipher.update(secret).toString('hex');
-        return result += cipher.final().toString('hex');
+
+        
+        const res = result += cipher.final().toString('hex');
+        console.log(res);
+        
+        return res
     
     }
     static encryptOtpauthUrl(otpauth_url:string):any{
