@@ -223,6 +223,14 @@ static otpFailed(res: Response) {
         message: "otp code not valid",
     })
 }
+
+static verifyTokenExpired(res: Response) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "verify token expired",
+    })
+}
 }
 
 export default FailedResponse

@@ -12,8 +12,10 @@ class UserModel {
     private secret_key!: string
     private otpauth_url!: string
     private verify_token!: string
+    private otp_verified_at!: string
     private otp!: string
     private action:Action
+    private jwt_token:string
     private created_at:string
     private updated_at:string
 
@@ -56,8 +58,16 @@ class UserModel {
         this.otp = otp
     }
 
+    setJwtToken(jwt_token: string) {
+        this.jwt_token = jwt_token
+    }
+
     setAction(action:Action){
         this.action = action 
+    }
+   
+    setOtpVerifiedAt(otp_verified_at:string){
+        this.otp_verified_at = otp_verified_at 
     }
     setCreatedAt(created_at:string){
         this.created_at = created_at
@@ -89,6 +99,13 @@ class UserModel {
     }
     getOtpauthUrl(): string {
         return this.otpauth_url
+    }
+    getOtpVerifiedAt(): string {
+        return this.otp_verified_at
+    }
+   
+    getJwtToken(): string {
+        return this.jwt_token
     }
     getVerifyToken(): string {
         return this.verify_token

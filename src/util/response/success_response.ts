@@ -20,6 +20,15 @@ class SuccessReponse {
             data: user
         })
     }
+    
+    static verifyOtpSuccess(res: Response, user:UserModel) {
+        return res.json({
+            code: 2000,
+            status: "success",
+            message: "verify otp success",
+            data: user
+        })
+    }
 }
 
 export default SuccessReponse

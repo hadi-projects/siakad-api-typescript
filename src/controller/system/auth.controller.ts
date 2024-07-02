@@ -30,13 +30,9 @@ export default class AuthController {
         if (user.getId == null) return FailedResponse.loginFailed(res)
 
         const compare = CryptoUtil.comparePassword(user_model.getPassword(), user.getPassword())
-        console.log(compare);
-
 
         if (compare == false) return FailedResponse.loginFailed(res)
         if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
-        console.log(1);
-
 
         response.setVerifyToken(randomBytes(24).toString('hex'))
         response.setId(user.getId())

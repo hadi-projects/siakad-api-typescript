@@ -4,7 +4,6 @@ const _2fa = require("node-2fa");
 const aesEcb = require('aes-ecb');
 const crypto = require('crypto')
 import dotenv from 'dotenv';
-import { log } from 'console';
 dotenv.config();
 
 
@@ -40,29 +39,26 @@ export default class CryptoUtil {
     }
     
     static verifyOtp(hashed:string, otp:string):boolean{
+
+        
         let dec = this.decryptSecret(hashed)
         let res = _2fa.verifyToken(dec, otp.toString())
+        
+        console.log("====");
+        console.log(dec, otp, res);
+        console.log("====");
         
         if(!res) return false
         return true
     }
     
     static encryptSecret(secret:string):any{
-
-        console.log('-=-=--=');
-        console.log(secret);
-        console.log('-=-=--=');
-        
-    
+            
         let key = new Buffer("8CBDEC62EB4DCA778F842B02503011B2" as string, 'hex')
         let cipher = crypto.createCipheriv("aes-128-ecb", key, null)
         cipher.setAutoPadding(false)
         let result = cipher.update(secret).toString('hex');
-
-        
         const res = result += cipher.final().toString('hex');
-        console.log(res);
-        
         return res
     
     }

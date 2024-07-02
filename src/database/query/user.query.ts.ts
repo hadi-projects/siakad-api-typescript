@@ -29,7 +29,6 @@ export default class UserQuery {
     }
 
     static create_token(user:UserModel){
-        
         return `
         UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())} 
         WHERE id = ${d.escape(user.getId())};
@@ -37,11 +36,26 @@ export default class UserQuery {
     }
    
     static create_otp(user:UserModel){
-        
         return `
         UPDATE users SET secret_key = ${d.escape(user.getSecretKey())},
         otpauth_url = ${d.escape(user.getOtpauthUrl())},
+        verify_token = ${d.escape(user.getVerifyToken())},
         status_id = ${d.escape(user.getStatus().getId())}
+        WHERE id = ${d.escape(user.getId())};
+        `
+    }
+    
+    static verified_otp(user:UserModel){
+        
+        console.log("update verified");
+        console.log(user);
+        
+        
+        return `
+        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())},
+        status_id = ${d.escape(user.getStatus().getStatus_id())},
+        otp_verified_at = ${d.escape(user.getOtpVerifiedAt())},
+        updated_at = ${d.escape(this.datetime)}
         WHERE id = ${d.escape(user.getId())};
         `
     }
