@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 
-export class ResourceTable {
+export default class ResourceTable {
     static table_name:string = 'resources'
 
     static async migrate() {
@@ -15,6 +15,6 @@ export class ResourceTable {
             );
         `)
         .then(()=>console.log(this.table_name + ' table migration success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table migration failed ❌'+e))
+        .catch((e)=>console.log(this.table_name + ' table migration failed ❌: '+e))
     }
 }

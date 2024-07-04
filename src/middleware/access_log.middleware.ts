@@ -8,10 +8,15 @@ import Resource from '../enum/resources.enum'
 import Action from '../enum/action.enum'
 import RoleModel from '../model/role.model'
 import LoglRepository from '../repository/log.repository'
+import JwtService from '../service/jwt.service'
+import UserRepository from '../repository/user.repository'
+import KeyVal from '../model/keyval.model'
+import RedisService from '../service/redis.service'
+import { createClient } from 'redis'
 
 export default class AccessLogMiddleware {
 
-	static log(req: express.Request, res: express.Response) {
+	static async log(req: express.Request, res: express.Response) {
 		const logger = new Logger()
 		const log_model = new LogModel()
 		const log_repository = new LoglRepository()
@@ -24,7 +29,7 @@ export default class AccessLogMiddleware {
 		log_model.setRequest_body(JSON.stringify(req.body))
 		log_model.setTimestamp(moment().format())
 
-		log_model.setUser(this.user(req))
+		log_model.setUser(await this.user(req))
 		log_model.setAccess(this.access(req))
 
 
@@ -36,19 +41,34 @@ export default class AccessLogMiddleware {
 
 	}
 
-	static user(req: express.Request) {
+	static async user(req: express.Request) {
 		const user_model = new UserModel()
 		const role_model = new RoleModel
+		const user_repo = new UserRepository()
+		const key_val = new KeyVal()
 		const authorization = req.headers.authorization
+		const redis = new RedisService()
+		redis.connect()
+
+		const client = await createClient()
+			.on('error', err => console.log('Redis Client Error', err))
+			.connect();
 
 		if (!authorization) {
 			role_model.setName('auth')
 			user_model.setRole(role_model)
-			
+
 			return user_model
 		}
+		const jwt_token = authorization.split(" ")[1]
+		const user_id = JSON.parse(JwtService.verify_jwt(jwt_token)).user_id
+		key_val.setKey('id')
+		key_val.setValue(user_id);
 
-		return user_model
+		const user = await user_repo.show(key_val)
+		if (user.getEmail() == null) return user_model
+		redis.r.set('user', JSON.stringify(user))
+		return user
 	}
 
 	static access(req: express.Request): AccessModel {

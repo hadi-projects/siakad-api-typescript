@@ -14,6 +14,6 @@ export default class RoleTable {
                 updated_at datetime
             );`)
         .then(()=>console.log(this.table_name + ' table migration success ✅'))
-        .catch(()=>console.log(this.table_name + ' table migration failed ❌'))
+        .catch((e)=>console.log(this.table_name + ' table migration failed ❌: ' + e))
     }
 }

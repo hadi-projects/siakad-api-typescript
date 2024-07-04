@@ -1,5 +1,6 @@
 import { Response } from "express";
 import UserModel from "../../model/user.model";
+import JwtModel from "../../model/jwt.model";
 
 
 class SuccessReponse {
@@ -27,6 +28,24 @@ class SuccessReponse {
             status: "success",
             message: "verify otp success",
             data: user
+        })
+    }
+    
+    static createDataSuccess(res: Response, jwt_model: JwtModel) {
+        return res.json({
+            code: 2001,
+            status: "success",
+            message: "create data success",
+            jwt: jwt_model
+        })
+    }
+    static getDataSuccess(res: Response, data:any, jwt_model: JwtModel) {
+        return res.json({
+            code: 2002,
+            status: "success",
+            message: "create data success",
+            jwt: jwt_model,
+            data: data
         })
     }
 }

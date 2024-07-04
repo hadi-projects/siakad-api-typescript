@@ -5,14 +5,14 @@ import PermissionRepositoryModel from '../model/permissionrepository.model'
 
 
 export default class PermissionMiddleware {
-    async check(req: express.Request, res: express.Response) {
+    async check(req: express.Request) {
         const user = AccessLogMiddleware.user(req)
         const access = AccessLogMiddleware.access(req)
         const permission_repo = new PermissionRepository()
         const permissionrepository_model = new PermissionRepositoryModel()
 
 
-        permissionrepository_model.setRole_name(user.getRole().getName())
+        permissionrepository_model.setRole_name((await user).getRole().getName())
         permissionrepository_model.setResource_name(access.getResource())
         permissionrepository_model.setPermission_name(access.getAction())
 

@@ -38,12 +38,8 @@ export default class AuthController {
         response.setId(user.getId())
 
         const result = await user_repo.create_token(response)
-        console.log(result);
-
         if (result == false) return FailedResponse.loginFailed(res)
-        console.log(2)
 
-        response.setStatus(user.getStatus())
         response.setStatus(user.getStatus())
 
         return SuccessReponse.login(res, response)

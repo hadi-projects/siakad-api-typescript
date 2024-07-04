@@ -9,13 +9,14 @@ export default class Middleware {
 
         const api_key = new ApiKeyMiddleware()
         const permission = new PermissionMiddleware()
+        // const
 
         let result = api_key.check(req, res)
         if(result == false) return FailedResponse.tokenFailed(res)
         
         AccessLogMiddleware.log(req, res)
         
-        result = await permission.check(req, res)
+        result = await permission.check(req)
         if(result == false) return FailedResponse.failedPermission(res, '')
 
         next()

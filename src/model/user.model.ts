@@ -15,7 +15,7 @@ class UserModel {
     private otp_verified_at!: string
     private otp!: string
     private action:Action
-    private jwt_token:string
+    private jwt_token:object
     private created_at:string
     private updated_at:string
 
@@ -58,7 +58,7 @@ class UserModel {
         this.otp = otp
     }
 
-    setJwtToken(jwt_token: string) {
+    setJwtToken(jwt_token: object) {
         this.jwt_token = jwt_token
     }
 
@@ -104,7 +104,7 @@ class UserModel {
         return this.otp_verified_at
     }
    
-    getJwtToken(): string {
+    getJwtToken(): object {
         return this.jwt_token
     }
     getVerifyToken(): string {
@@ -189,6 +189,15 @@ class UserModel {
             return false
         }
         return true
+    }
+
+    static instanse:UserModel;
+    
+    public static get instance(): UserModel {
+        if (!UserModel.instance) {
+            UserModel.instanse = new UserModel();
+        }
+        return UserModel.instance;
     }
 
 }

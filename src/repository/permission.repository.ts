@@ -3,6 +3,7 @@ import Logger from "../service/logger";
 import PermissionQuery from '../database/query/permission.query';
 import PermissionRepositoryModel from '../model/permissionrepository.model';
 import { RowDataPacket } from 'mysql2/promise';
+import { log } from 'console';
 
 export default class PermissionRepository {
     logger = new Logger()
@@ -12,9 +13,9 @@ export default class PermissionRepository {
         let result = false
         await (await d).query<RowDataPacket[]>(PermissionQuery.index(api))
             .then(([data]) => {
+                const r = JSON.parse(JSON.stringify(data))[0]
                 console.log(data);
                 
-                const r = JSON.parse(JSON.stringify(data))[0]
                 if (r.permissions == null) result = false
                 else result = true
             })

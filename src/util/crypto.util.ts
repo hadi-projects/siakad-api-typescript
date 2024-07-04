@@ -10,7 +10,7 @@ dotenv.config();
 export default class CryptoUtil {
     static sha256(data: string): string {
         const a = c.createHash('sha256').update(data).digest('hex').toString()
-        console.log(a);
+        // console.log(a);
         return 'a'
 
     }
@@ -44,9 +44,9 @@ export default class CryptoUtil {
         let dec = this.decryptSecret(hashed)
         let res = _2fa.verifyToken(dec, otp.toString())
         
-        console.log("====");
-        console.log(dec, otp, res);
-        console.log("====");
+        // console.log("====");
+        // console.log(dec, otp, res);
+        // console.log("====");
         
         if(!res) return false
         return true

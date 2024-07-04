@@ -3,14 +3,14 @@ import axios from 'axios'
 export class AuthService{
     async oauth2(parameter: ApiKeyModel):Promise<string>{
         
-        console.log(parameter.getBody())
-        console.log(parameter.getHeader())
+        // console.log(parameter.getBody())
+        // console.log(parameter.getHeader())
 
         try{
             const result = await axios.post(`https://wallet-admin.depository.id/auth/oauth/token`,
             parameter.getBody(), {headers:parameter.getHeader()},
             )
-            console.log(result)
+            // console.log(result)
         }catch(e){
             return 'gagal'
         }

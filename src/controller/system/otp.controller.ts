@@ -8,6 +8,7 @@ import CryptoUtil from "../../util/crypto.util"
 import StatusModel from "../../model/status.model"
 import { randomBytes } from "crypto"
 import moment from "moment"
+import JwtService from "../../service/jwt.service"
 
 export default class OtpController {
 
@@ -31,33 +32,26 @@ export default class OtpController {
 
         user.setVerifyToken(randomBytes(24).toString('hex'))
 
-        console.log('here 1');
-
-
         // when secret exist
-        if (user.getSecretKey() !== '' && user.getOtpauthUrl() != '') {
+        if (user.getSecretKey() != null && user.getOtpauthUrl() != null) {
             const dec_secret = CryptoUtil.decryptSecret(user.getSecretKey())
             const dec_uri = CryptoUtil.decryptOtpauthUrl(user.getOtpauthUrl())
-
+            
             const status = await user_repo.create_token(user)
             if (status == null) return FailedResponse.queryFailed(res, '')
-
-            response.setSecretKey(dec_secret)
-            response.setOtpauthUrl(dec_uri)
-            response.setVerifyToken(user.getVerifyToken())
-
-            return SuccessReponse.generate2fa(res, response)
-        }
+                
+                response.setSecretKey(dec_secret)
+                response.setOtpauthUrl(dec_uri)
+                response.setVerifyToken(user.getVerifyToken())
+                
+                return SuccessReponse.generate2fa(res, response)
+            }
         const raw = CryptoUtil.generateOtp(user.getEmail())
         const encrypted_secret = CryptoUtil.encryptSecret(raw.secret)
         const encrypted_uri = CryptoUtil.hashedOtpauthUrl(raw.uri)
 
-        console.log('here 1');
-        
-
         user.setSecretKey(encrypted_secret)
         user.setOtpauthUrl(encrypted_uri)
-        status_model.setId("2")
         user.setStatus(status_model) // verify otp
 
         const result = await user_repo.create_otp(user)
@@ -88,23 +82,21 @@ export default class OtpController {
 
         const user: UserModel = await user_repo.show(keyval)
         if (user.getId() == null) return FailedResponse.queryFailed(res, '')
-        if (user.getStatus().getName() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
 
         // verify otp
         let result = CryptoUtil.verifyOtp(user.getSecretKey(), request.getOtp())
-        console.log(result);
         if (result == false) return FailedResponse.otpFailed(res)
 
         // update status 
         user.setVerifyToken('')
-        status_model.setStatus_id("4") // active
+        status_model.setStatus_id("3") // active
         user.setStatus(status_model)
         user.setOtpVerifiedAt(moment().format())
 
         result = await user_repo.verified_otp(user)
         if (result == false) return FailedResponse.queryFailed(res, '')
 
-        response.setJwtToken('token')
+        response.setJwtToken(JwtService.generate_jwt(user.getId()))
 
         return SuccessReponse.verifyOtpSuccess(res, response)
     }

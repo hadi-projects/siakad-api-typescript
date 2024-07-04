@@ -24,6 +24,6 @@ export default class UserTable {
             );
         `)
         .then(()=>console.log(this.table_name + ' table migration success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table migration failed ❌' + e))
+        .catch((e)=>console.log(this.table_name + ' table migration failed ❌: ' + e))
     }
 }

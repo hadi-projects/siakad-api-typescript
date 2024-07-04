@@ -6,7 +6,41 @@ import moment from 'moment';
 export default class UserQuery {
     static datetime = moment().format().split("+")[0].replace("T", " ")
 
+    static index() {
+        return `
+        SELECT 
+            users.id AS id,
+            users.name AS name, 
+            users.email AS email, 
+            users.password AS password, 
+            roles.id AS role_id, 
+            roles.name AS role_name, 
+            statuses.status_id AS status_id, 
+            statuses.name AS status_name, 
+            users.secret_key AS secret_key, 
+            users.otpauth_url AS otpauth_url, 
+            users.verify_token AS verify_token,
+            users.updated_at AS updated_at, 
+            users.created_at AS created_at
+        FROM users 
+        JOIN statuses ON statuses.status_id = users.status_id AND statuses.status_key = 'user'
+        JOIN roles ON roles.id = users.role_id;
+        `;
+    }
+    
+    static create(user: UserModel) {
+        return `
+        INSERT INTO users (
+        name, email, password, role, created_at
+        ) VALUES (
+        ${d.escape(user.getName())}, ${d.escape(user.getEmail())}, 
+        ${d.escape(user.getPassword())}, ${d.escape(user.getRole().getId())},
+        ${this.datetime});
+        `;
+    }
     static show(keyval: Keyval) {
+        console.log(keyval);
+        
         return `
         SELECT 
             users.id AS id,
@@ -25,7 +59,7 @@ export default class UserQuery {
         FROM users 
         JOIN statuses ON statuses.status_id = users.status_id AND statuses.status_key = 'user'
         JOIN roles ON roles.id = users.role_id
-        WHERE ${keyval.getKey()} = ${d.escape(keyval.getValue())};`;
+        WHERE users.${keyval.getKey()} = ${d.escape(keyval.getValue())};`;
     }
 
     static create_token(user:UserModel){
@@ -46,11 +80,6 @@ export default class UserQuery {
     }
     
     static verified_otp(user:UserModel){
-        
-        console.log("update verified");
-        console.log(user);
-        
-        
         return `
         UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())},
         status_id = ${d.escape(user.getStatus().getStatus_id())},
