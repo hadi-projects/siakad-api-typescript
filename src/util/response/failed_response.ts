@@ -36,11 +36,11 @@ static jwtFailed(res: Response) {
     })
 }
 
-static queryFailed(res: Response, token:string) {
+static queryFailed(res: Response, token:string, msg="") {
     return res.json({
         code: 1006,
-        status: "failed",
-        message: "query failed",
+        status: "failed, query failed",
+        message: msg,
         token:token
     })
 }

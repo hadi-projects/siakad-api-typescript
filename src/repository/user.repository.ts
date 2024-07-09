@@ -7,6 +7,11 @@ import RoleModel from '../model/role.model';
 import StatusModel from '../model/status.model';
 import UserQuery from '../database/query/user.query.ts';
 
+
+interface re{
+        result: UserModel| boolean
+}
+
 export default class UserRepository {
     logger = new Logger()
     error_logger = this.logger.errorLogger()
@@ -47,7 +52,7 @@ export default class UserRepository {
     }
 
 
-    async create(user: UserModel) {
+    async create(user: UserModel):Promise<any>{
         let status = false
         await (await db).query<RowDataPacket[]>(UserQuery.create(user))
             .then(([data, field]) => {
@@ -55,10 +60,14 @@ export default class UserRepository {
                 if (result.affectedRows == 0) status = false
                 else status = true
             })
-            .catch((err) => this.error_logger.error({ message: err, system: "mysql" }))
+            .catch((err) => {
+                this.error_logger.error({ message: err, system: "mysql" })
+                return status = err
+            } )
         return status
     }
 
+    
     async show(keyval: Keyval) {
         const user = new UserModel()
         const role = new RoleModel()
@@ -78,17 +87,17 @@ export default class UserRepository {
                 user.setId(result.id)
                 user.setName(result.name)
                 user.setEmail(result.email)
-                user.setPassword(result.password)
                 user.setRole(role)
                 user.setStatus(status)
-                user.setSecretKey(result.secret_key)
-                user.setOtpauthUrl(result.otpauth_url)
-                user.setVerifyToken(result.verify_token)
                 user.setCreatedAt(result.created_at)
                 user.setUpdatedAt(result.updated_at)
 
             })
-            .catch((err: any) => this.error_logger.error({ message: err, system: "mysql" }))
+            .catch((err: any) => 
+                {
+                    this.error_logger.error({ message: err, system: "mysql" })
+                }
+            )
         return user
     }
 

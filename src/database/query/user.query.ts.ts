@@ -35,7 +35,7 @@ export default class UserQuery {
         ) VALUES (
         ${d.escape(user.getName())}, ${d.escape(user.getEmail())}, 
         ${d.escape(user.getPassword())}, ${d.escape(user.getRole().getId())},
-        0, '', '${this.datetime}');
+        1, '', '${this.datetime}');
         `;
     }
     static show(keyval: Keyval) {

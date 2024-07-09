@@ -27,4 +27,11 @@ export default class KeyVal {
             }
             return true
         }
+
+        public static setKeyVal(key:string, val:any){
+            const keyval = new KeyVal()
+            keyval.setKey(key)
+            keyval.setValue(val)
+            return keyval
+        }
 }
