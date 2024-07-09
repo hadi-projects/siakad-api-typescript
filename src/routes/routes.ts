@@ -50,7 +50,7 @@ router.get('/v1/user/index', user.index)
 router.post('/v1/user/create', user.create)
 router.post('/v1/user/show', user.show)
 router.put('/v1/user/edit', user.edit)
-router.delete('/v1/user/delete/:{id}', user.delete)
+router.delete('/v1/user/delete', user.delete)
 
 router.post('/v1/auth/login', auth.login)
 router.post('/v1/auth/logout', auth.logout)

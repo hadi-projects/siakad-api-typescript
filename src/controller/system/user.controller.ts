@@ -36,7 +36,7 @@ export default class UserController {
 
         return SuccessReponse.createDataSuccess(res, JwtService.generate_jwt(''))
     }
-    
+
     async show(req: Request, res: Response): Promise<any> {
         const request = new UserModel()
         const user_repo =  new UserRepository()
@@ -53,6 +53,16 @@ export default class UserController {
         InfoResponse.progress(res)
     }
     async delete(req: Request, res: Response): Promise<any> {
-        InfoResponse.progress(res)
+        const request = new UserModel()
+        const user_repo =  new UserRepository()
+
+        request.setId(req.body['id'])
+
+        const result = await user_repo.delete(KeyVal.setKeyVal('id', request.getId()))
+        if (result != true) return FailedResponse.queryFailed(res, '', 'result.message')
+
+        return SuccessReponse.deleteDataSuccess(res, JwtService.generate_jwt(''))
+
+        
     }
 }

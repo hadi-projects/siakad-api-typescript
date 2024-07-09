@@ -48,6 +48,15 @@ class SuccessReponse {
             data: data
         })
     }
+   
+    static deleteDataSuccess(res: Response, jwt_model: JwtModel) {
+        return res.json({
+            code: 2002,
+            status: "success",
+            message: "delete data success",
+            jwt: jwt_model,
+        })
+    }
 }
 
 export default SuccessReponse

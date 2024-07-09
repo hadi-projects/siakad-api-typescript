@@ -8,8 +8,8 @@ import StatusModel from '../model/status.model';
 import UserQuery from '../database/query/user.query.ts';
 
 
-interface re{
-        result: UserModel| boolean
+interface re {
+    result: UserModel | boolean
 }
 
 export default class UserRepository {
@@ -52,7 +52,7 @@ export default class UserRepository {
     }
 
 
-    async create(user: UserModel):Promise<any>{
+    async create(user: UserModel): Promise<any> {
         let status = false
         await (await db).query<RowDataPacket[]>(UserQuery.create(user))
             .then(([data, field]) => {
@@ -63,11 +63,11 @@ export default class UserRepository {
             .catch((err) => {
                 this.error_logger.error({ message: err, system: "mysql" })
                 return status = err
-            } )
+            })
         return status
     }
 
-    
+
     async show(keyval: Keyval) {
         const user = new UserModel()
         const role = new RoleModel()
@@ -93,12 +93,25 @@ export default class UserRepository {
                 user.setUpdatedAt(result.updated_at)
 
             })
-            .catch((err: any) => 
-                {
-                    this.error_logger.error({ message: err, system: "mysql" })
-                }
-            )
+            .catch((err: any) => {
+                this.error_logger.error({ message: err, system: "mysql" })
+            })
         return user
+    }
+
+    async delete(keyval: Keyval) {
+        let status = false
+        await (await db).query<RowDataPacket[]>(UserQuery.delete(keyval))
+            .then(([data, field]) => {
+                const result = JSON.parse(JSON.stringify(data))
+                if (result.affectedRows == 0) status = false
+                else status = true
+            })
+            .catch((err) => {
+                this.error_logger.error({ message: err, system: "mysql" })
+                err = err.message
+            })
+        return status
     }
 
     async create_token(user: UserModel) {

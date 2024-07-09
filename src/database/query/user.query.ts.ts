@@ -62,9 +62,13 @@ export default class UserQuery {
         WHERE users.${keyval.getKey()} = ${d.escape(keyval.getValue())};`;
     }
 
+    static delete(keyval:Keyval){
+        return `DELETE FROM users WHERE ${keyval.getKey()} = ${d.escape(keyval.getValue())};`
+    }
+    
     static create_token(user:UserModel){
         return `
-        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())} 
+        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())}, updated_at =  ${this.datetime}
         WHERE id = ${d.escape(user.getId())};
         `
     }
