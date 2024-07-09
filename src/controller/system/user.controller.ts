@@ -12,6 +12,7 @@ import { createClient } from 'redis'
 
 export default class UserController {
     async index(req: Request, res: Response): Promise<any> {
+        res.send(1234)
         const j = new JwtModel()
         const user_repo = new UserRepository()
 
@@ -19,10 +20,7 @@ export default class UserController {
             .on('error', err => console.log('Redis Client Error', err))
             .connect();
 
-            var ss = await user_repo.index()
-            console.log("users");
-            console.log(ss);
-            console.log("users");
+        var ss = await user_repo.index()
             
 
         return SuccessReponse.getDataSuccess(res, ss, j)
@@ -32,7 +30,7 @@ export default class UserController {
         const user_repo = new UserRepository()
         const role = new RoleModel()
 
-        role.setId(req.body['role'])
+        role.setId(req.body['role_id'])
         request.setName(req.body['name'])
         request.setEmail(req.body['email'])
         request.setPassword(req.body['password'])

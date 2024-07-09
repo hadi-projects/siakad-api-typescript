@@ -31,11 +31,11 @@ export default class UserQuery {
     static create(user: UserModel) {
         return `
         INSERT INTO users (
-        name, email, password, role, created_at
+        name, email, password, role_id, status_id, verify_token, created_at
         ) VALUES (
         ${d.escape(user.getName())}, ${d.escape(user.getEmail())}, 
         ${d.escape(user.getPassword())}, ${d.escape(user.getRole().getId())},
-        ${this.datetime});
+        0, '', '${this.datetime}');
         `;
     }
     static show(keyval: Keyval) {

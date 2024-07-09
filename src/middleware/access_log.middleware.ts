@@ -13,6 +13,7 @@ import UserRepository from '../repository/user.repository'
 import KeyVal from '../model/keyval.model'
 import RedisService from '../service/redis.service'
 import { createClient } from 'redis'
+import StatusModel from '../model/status.model'
 
 export default class AccessLogMiddleware {
 
@@ -67,6 +68,15 @@ export default class AccessLogMiddleware {
 
 		const user = await user_repo.show(key_val)
 		if (user.getEmail() == null) return user_model
+
+		user.setOtpauthUrl("")
+		user.setSecretKey("")
+		user.setCreatedAt("")
+		user.setPassword("")
+		user.setStatus(StatusModel.blankStatus())
+		user.setUpdatedAt("")
+		user.setVerifyToken("")
+
 		redis.r.set('user', JSON.stringify(user))
 		return user
 	}

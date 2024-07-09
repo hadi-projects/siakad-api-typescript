@@ -18,4 +18,8 @@ export default class RoleModel {
         this.name = name;
     }
 
+    public static blankRole():RoleModel{
+        return new RoleModel()
+    }
+
 }

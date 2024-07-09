@@ -37,5 +37,9 @@ export default class StatusModel {
     }
 
 
+    public static blankStatus():StatusModel{
+        return new StatusModel()
+    }
+
 
 }

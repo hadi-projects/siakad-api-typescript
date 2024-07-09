@@ -6,7 +6,6 @@ import UserModel from '../model/user.model';
 import RoleModel from '../model/role.model';
 import StatusModel from '../model/status.model';
 import UserQuery from '../database/query/user.query.ts';
-import { log } from 'console';
 
 export default class UserRepository {
     logger = new Logger()
@@ -50,7 +49,7 @@ export default class UserRepository {
 
     async create(user: UserModel) {
         let status = false
-        await (await db).query<RowDataPacket[]>(UserQuery.create_otp(user))
+        await (await db).query<RowDataPacket[]>(UserQuery.create(user))
             .then(([data, field]) => {
                 const result = JSON.parse(JSON.stringify(data))
                 if (result.affectedRows == 0) status = false
