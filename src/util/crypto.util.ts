@@ -14,7 +14,11 @@ export default class CryptoUtil {
     }
 
     static comparePassword(plain: string, hashed: string): boolean {
-        if(!plain.includes("$")) return false;
+        console.log("hashed");
+        console.log(plain);
+        console.log(hashed);
+        
+        if(!hashed.includes("$")) return false;
         return bcrypt.compareSync(plain, hashed);
     }
 

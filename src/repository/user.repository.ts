@@ -102,6 +102,7 @@ export default class UserRepository {
                 user.setId(result.id)
                 user.setName(result.name)
                 user.setEmail(result.email)
+                user.setPassword(result.password)
                 user.setRole(role)
                 user.setStatus(status)
                 user.setCreatedAt(result.created_at)
@@ -126,19 +127,6 @@ export default class UserRepository {
                 this.error_logger.error({ message: err, system: "mysql" })
                 err = err.message
             })
-        return status
-    }
-
-    async create_token(user: UserModel) {
-
-        let status = false
-        await (await db).query<RowDataPacket[]>(UserQuery.create_token(user))
-            .then(([data, field]) => {
-                const result = JSON.parse(JSON.stringify(data))
-                if (result.affectedRows == 0) status = false
-                else status = true
-            })
-            .catch((err) => this.error_logger.error({ message: err, system: "mysql" }))
         return status
     }
 

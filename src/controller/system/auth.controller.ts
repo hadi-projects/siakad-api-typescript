@@ -12,24 +12,18 @@ import FailedResponse from '../../util/response/failed_response'
 export default class AuthController {
     async login(req: Request, res: Response) {
         const request = new UserModel()
-        const request2 = new UserModel()
         const user_repo = new UserRepository()
         const response = new UserModel()
 
-        // request.setEmail(req.body["email"])
-        // request.setPassword(req.body["password"])
         request.setEmail(req.body["email"]).setPassword(req.body["password"])
 
-        console.log(request);
-        console.log(request2);
-        
         if (!request.validateLogin(request)) return FailedResponse.loginFailed(res)
 
         const user = await user_repo.show(Keyval.setKeyVal('email', request.getEmail()))
-        if (user.getId == null) return FailedResponse.loginFailed(res)
+        if (user.getId() == null) return FailedResponse.loginFailed(res)
 
-        if (CryptoUtil.comparePassword(request.getPassword(), user.getPassword()) == false) return FailedResponse.loginFailed(res)
-        if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
+        if (!CryptoUtil.comparePassword(request.getPassword(), user.getPassword())) return FailedResponse.loginFailed(res)
+        else if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
 
         response.setVerifyToken(randomBytes(24).toString('hex'))
         response.setId(user.getId())

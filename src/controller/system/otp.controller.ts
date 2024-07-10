@@ -37,7 +37,7 @@ export default class OtpController {
             const dec_secret = CryptoUtil.decryptSecret(user.getSecretKey())
             const dec_uri = CryptoUtil.decryptOtpauthUrl(user.getOtpauthUrl())
             
-            const status = await user_repo.create_token(user)
+            const status = await user_repo.edit(user)
             if (status == null) return FailedResponse.queryFailed(res, '')
                 
                 response.setSecretKey(dec_secret)
