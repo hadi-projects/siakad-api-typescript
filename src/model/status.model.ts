@@ -40,6 +40,10 @@ export default class StatusModel {
     public static blankStatus():StatusModel{
         return new StatusModel()
     }
-
-
+    public static setStatusModel (id:string, name:string):StatusModel{
+        const status = new StatusModel()
+        status.setId(id)
+        status.setName(name)
+        return status
+    }
 }

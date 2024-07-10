@@ -66,6 +66,21 @@ export default class UserRepository {
             })
         return status
     }
+    
+    async edit(user: UserModel): Promise<any> {
+        let status = false
+        await (await db).query<RowDataPacket[]>(UserQuery.edit(user))
+            .then(([data, field]) => {
+                const result = JSON.parse(JSON.stringify(data))
+                if (result.affectedRows == 0) status = false
+                else status = true
+            })
+            .catch((err) => {
+                this.error_logger.error({ message: err, system: "mysql" })
+                return status = err
+            })
+        return status
+    }
 
 
     async show(keyval: Keyval) {

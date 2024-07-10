@@ -38,6 +38,7 @@ export default class UserQuery {
         1, '', '${this.datetime}');
         `;
     }
+    
     static show(keyval: Keyval) {
         console.log(keyval);
         
@@ -94,54 +95,39 @@ export default class UserQuery {
     }
 
 
-    // static edit(user: UserModel) {
-    //     console.log(user);
+    static edit(user: UserModel) {
+        console.log(user);
         
-    //     return `
-    //     UPDATE users SET 
-    //     users.name = CASE
-    //         WHEN ${d.escape(user.getName())} = null THEN users.name
-    //         WHEN ${d.escape(user.getName())} = '' THEN users.name
-    //         ELSE users.name
-    //     END,
-    //     users.email = CASE
-    //         WHEN ${d.escape(user.getEmail())} = null THEN users.email
-    //         WHEN ${d.escape(user.getEmail())} = '' THEN users.email
-    //         ELSE ${d.escape(user.getEmail())}
-    //     END,
-    //     users.password = CASE
-    //         WHEN ${d.escape(user.getPassword())} = null THEN users.password
-    //         WHEN ${d.escape(user.getPassword())} = '' THEN users.password
-    //         ELSE ${d.escape(user.getPassword())}
-    //     END,
-    //     users.role_id = CASE
-    //         WHEN ${d.escape(user.getRole().getId())} = null THEN users.role_id
-    //         WHEN ${d.escape(user.getRole().getId())} = '' THEN users.role_id
-    //         ELSE ${d.escape(user.getRole().getId())}
-    //     END,
-    //     users.status_id = CASE
-    //         WHEN ${d.escape(user.getStatus().getId())} = null THEN users.status_id
-    //         WHEN ${d.escape(user.getStatus().getId())} = '' THEN users.status_id
-    //         ELSE ${d.escape(user.getStatus().getId())}
-    //     END,
-    //     users.secret_key = CASE
-    //         WHEN ${d.escape(user.getSecretKey())} = null THEN users.secret_key
-    //         WHEN ${d.escape(user.getSecretKey())} = '' THEN users.secret_key
-    //         ELSE ${d.escape(user.getSecretKey())}
-    //     END,
-    //     users.otpauth_url = CASE
-    //         WHEN ${d.escape(user.getOtpauthUrl())} = null THEN users.otpauth_url
-    //         WHEN ${d.escape(user.getOtpauthUrl())} = '' THEN users.otpauth_url
-    //         ELSE ${d.escape(user.getOtpauthUrl())}
-    //     END,
-    //     users.verify_token = CASE
-    //         WHEN ${d.escape(user.getVerifyToken())} = null THEN users.verify_token
-    //         WHEN ${d.escape(user.getVerifyToken())} = '' THEN users.verify_token
-    //         ELSE ${d.escape(user.getVerifyToken())}
-    //     END,
-    //     users.updated_at = ${this.datetime}
-    //     WHERE users.id = ${d.escape(user.getId())};
-    //     `
-    // }
+        return `
+        UPDATE users SET 
+        users.name = 
+            CASE WHEN ${d.escape(user.getName())} IS NULL 
+                THEN users.name ELSE ${d.escape(user.getName())} 
+            END,
+        users.email = CASE 
+            WHEN ${d.escape(user.getEmail())} IS NULL 
+                THEN users.email ELSE ${d.escape(user.getEmail())} 
+            END,
+        users.password = CASE
+            WHEN ${d.escape(user.getPassword())} IS NULL 
+                THEN users.password ELSE ${d.escape(user.getPassword())} 
+            END,
+        users.role_id = CASE
+            WHEN ${d.escape(user.getRole().getId())} IS NULL THEN users.role_id ELSE ${d.escape(user.getRole().getId())} END,
+        users.status_id = CASE
+            WHEN ${d.escape(user.getStatus().getId())} IS NULL THEN users.status_id ELSE ${d.escape(user.getStatus().getId())}
+        END,
+        users.secret_key = CASE
+            WHEN ${d.escape(user.getSecretKey())} IS NULL THEN users.secret_key ELSE ${d.escape(user.getSecretKey())}
+        END,
+        users.otpauth_url = CASE
+            WHEN ${d.escape(user.getOtpauthUrl())} IS NULL THEN users.otpauth_url ELSE ${d.escape(user.getOtpauthUrl())}
+        END,
+        users.verify_token = CASE
+            WHEN ${d.escape(user.getVerifyToken())} IS NULL THEN users.verify_token ELSE ${d.escape(user.getVerifyToken())} 
+        END,
+        users.updated_at = '${this.datetime}'
+        WHERE users.id = ${d.escape(user.getId())};`
+    }
 }
 	

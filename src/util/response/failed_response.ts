@@ -231,6 +231,14 @@ static verifyTokenExpired(res: Response) {
         message: "verify token expired",
     })
 }
+
+static validationFailed(res: Response) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "Validate request failed",
+    })
+}
 }
 
 export default FailedResponse

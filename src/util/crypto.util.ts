@@ -1,19 +1,11 @@
-import c from 'crypto'
 import bcrypt from 'bcryptjs';
 const _2fa = require("node-2fa");
-const aesEcb = require('aes-ecb');
 const crypto = require('crypto')
 import dotenv from 'dotenv';
 dotenv.config();
 
 
 export default class CryptoUtil {
-    static sha256(data: string): string {
-        const a = c.createHash('sha256').update(data).digest('hex').toString()
-        // console.log(a);
-        return 'a'
-
-    }
 
     static hashPassword(plain: string): string {
         var salt = bcrypt.genSaltSync(10);
@@ -22,8 +14,8 @@ export default class CryptoUtil {
     }
 
     static comparePassword(plain: string, hashed: string): boolean {
+        if(!plain.includes("$")) return false;
         return bcrypt.compareSync(plain, hashed);
-
     }
 
     static generateOtp(account:any):any {
@@ -39,15 +31,8 @@ export default class CryptoUtil {
     }
     
     static verifyOtp(hashed:string, otp:string):boolean{
-
-        
         let dec = this.decryptSecret(hashed)
         let res = _2fa.verifyToken(dec, otp.toString())
-        
-        // console.log("====");
-        // console.log(dec, otp, res);
-        // console.log("====");
-        
         if(!res) return false
         return true
     }

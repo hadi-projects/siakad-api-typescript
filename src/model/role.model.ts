@@ -22,4 +22,11 @@ export default class RoleModel {
         return new RoleModel()
     }
 
+    public static setRoleModel(id:string, name:string):RoleModel{
+        const role = new RoleModel()
+        role.setId(id)
+        role.setName(name)
+        return role
+    }
+
 }

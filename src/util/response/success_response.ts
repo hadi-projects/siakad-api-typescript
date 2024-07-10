@@ -57,6 +57,15 @@ class SuccessReponse {
             jwt: jwt_model,
         })
     }
+    static editDataSuccess(res: Response, jwt_model: JwtModel) {
+        return res.json({
+            code: 2002,
+            status: "success",
+            message: "edit data success",
+            jwt: jwt_model,
+        })
+    
+    }
 }
 
 export default SuccessReponse
