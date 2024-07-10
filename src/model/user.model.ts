@@ -2,22 +2,23 @@ import Action from "../enum/action.enum"
 import RoleModel from "./role.model"
 import StatusModel from "./status.model"
 
+
 class UserModel {
-    private id!: string
-    private name!: string
-    private email!: string
-    private password!: string
+    private id!: any
+    private name!: any
+    private email!: any
+    private password!: any
     private role!: RoleModel
     private status!: StatusModel
-    private secret_key!: string
-    private otpauth_url!: string
-    private verify_token!: string
-    private otp_verified_at!: string
-    private otp!: string
+    private secret_key!: any
+    private otpauth_url!: any
+    private verify_token!: any
+    private otp_verified_at!: any
+    private otp!: any
     private action:Action
     private jwt_token:object
-    private created_at:string
-    private updated_at:string
+    private created_at:any
+    private updated_at:any
 
 
     setId(id: string):UserModel {
@@ -30,7 +31,7 @@ class UserModel {
         return this
     }
     
-    setEmail(email: string):UserModel  {
+    setEmail(email: any):UserModel  {
         this.email = email
         return this
     }
@@ -90,6 +91,7 @@ class UserModel {
         this.updated_at = updated_at
         return this
     }
+    
     getId(): string {
         return this.id
     }
@@ -144,12 +146,55 @@ class UserModel {
         return this.updated_at
     }
 
-    public static setRoleModel(id:string, name:string){
-        const role = new RoleModel()
-        role.setId(id)
-        role.setName(name)
-        return role
+
+    removeId(): UserModel {
+        delete this.id
+        return this
     }
+
+    removeName(): UserModel {
+        delete this.name
+        return this
+    }
+    removeEmail(): UserModel {
+        delete this.email
+        return this
+    }
+    removePassword(): UserModel {
+        delete this.password
+        return this
+    }
+    removeSecretKey(): UserModel {
+        delete this.secret_key
+        return this
+    }
+    removeOtpauthUrl(): UserModel {
+        delete this.otpauth_url
+        return this
+    }
+    removeOtpVerifiedAt(): UserModel {
+        delete this.otp_verified_at
+        return this
+    }
+   
+    removeVerifyToken(): UserModel {
+        delete this.verify_token
+        return this
+    }
+    removeOtp(): UserModel {
+        delete this.otp
+        return this
+    }
+
+    removeCreatedAt():UserModel{
+        delete this.created_at
+        return this
+    }
+    removeUpdatedAt():UserModel{
+        delete this.updated_at
+        return this
+    }
+
     validateLogin(user: UserModel): boolean {
         if (
             user.getEmail() == null || user.getEmail() == "" ||

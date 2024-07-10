@@ -40,8 +40,6 @@ export default class UserQuery {
     }
 
     static show(keyval: Keyval) {
-        console.log(keyval);
-
         return `
         SELECT 
             users.id AS id,
@@ -63,47 +61,22 @@ export default class UserQuery {
         WHERE users.${keyval.getKey()} = ${d.escape(keyval.getValue())};`;
     }
 
-    static delete(keyval: Keyval) {
-        return `DELETE FROM users WHERE ${keyval.getKey()} = ${d.escape(keyval.getValue())};`
-    }
-
-    static create_otp(user: UserModel) {
-        return `
-        UPDATE users SET secret_key = ${d.escape(user.getSecretKey())},
-        otpauth_url = ${d.escape(user.getOtpauthUrl())},
-        verify_token = ${d.escape(user.getVerifyToken())},
-        status_id = ${d.escape(user.getStatus().getId())}
-        WHERE id = ${d.escape(user.getId())};
-        `
-    }
-
-    static verified_otp(user: UserModel) {
-        return `
-        UPDATE users SET verify_token = ${d.escape(user.getVerifyToken())},
-        status_id = ${d.escape(user.getStatus().getStatus_id())},
-        otp_verified_at = ${d.escape(user.getOtpVerifiedAt())},
-        updated_at = ${d.escape(this.datetime)}
-        WHERE id = ${d.escape(user.getId())};
-        `
-    }
-
-
     static edit(user: UserModel) {
-        console.log(user);
-        console.log(user.getRole());
-        // if(user.getRole() == undefined) user.setRole()
-
         return `
         UPDATE users SET 
-        users.name = CASE WHEN ${d.escape(user.getName())} IS NOT NULL END,
-        users.email = CASE WHEN ${d.escape(user.getEmail())} IS NOT NULL END,
-        users.password = CASE WHEN ${d.escape(user.getPassword())} IS NOT NULL END,
-        users.role_id = CASE WHEN ${user.getRole() == undefined ? "NULL" : d.escape(user.getRole().getId())} IS NOT NULL END,
-        users.status_id = CASE WHEN ${user.getStatus() == undefined ? "NULL" : d.escape(user.getStatus().getId())} IS NOT NULL END,
+        users.name = CASE WHEN ${d.escape(user.getName())} IS NULL THEN users.name ELSE ${d.escape(user.getName())} END,
+        users.email = CASE WHEN ${d.escape(user.getEmail())} IS NULL THEN users.email ELSE ${d.escape(user.getEmail())} END,
+        users.password = CASE WHEN ${d.escape(user.getPassword())} IS NULL THEN users.password ELSE ${d.escape(user.getPassword())} END,
+        users.role_id = CASE WHEN ${user.getRole() == undefined ? null : d.escape(user.getRole().getId())} IS NULL THEN users.role_id ELSE ${user.getRole() == undefined ? null : d.escape(user.getRole().getId())} END,
+        users.status_id = CASE WHEN ${user.getStatus() == undefined ? null : d.escape(user.getStatus().getId())} IS NULL THEN users.status_id ELSE ${user.getRole() == undefined ? null : d.escape(user.getStatus().getId())} END,
         users.secret_key = CASE WHEN ${d.escape(user.getSecretKey())} IS NULL THEN users.secret_key ELSE ${d.escape(user.getSecretKey())} END,
-        users.otpauth_url = CASE WHEN ${d.escape(user.getOtpauthUrl())} IS NOT NULL END,
-        users.verify_token = CASE ${d.escape(user.getVerifyToken())} IS NOT NULL END,
+        users.otpauth_url = CASE WHEN ${d.escape(user.getOtpauthUrl())} IS NULL THEN users.otpauth_url ELSE ${d.escape(user.getOtpauthUrl())} END,
+        users.verify_token = CASE WHEN ${d.escape(user.getVerifyToken())} IS NULL THEN users.verify_token ELSE ${d.escape(user.getVerifyToken())} END,
         users.updated_at = '${this.datetime}'
         WHERE users.id = ${d.escape(user.getId())};`
+    }
+   
+    static delete(keyval: Keyval) {
+        return `DELETE FROM users WHERE ${keyval.getKey()} = ${d.escape(keyval.getValue())};`
     }
 }

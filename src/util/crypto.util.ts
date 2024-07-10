@@ -12,12 +12,7 @@ export default class CryptoUtil {
         var hash = bcrypt.hashSync(plain, salt);
         return hash;
     }
-
-    static comparePassword(plain: string, hashed: string): boolean {
-        console.log("hashed");
-        console.log(plain);
-        console.log(hashed);
-        
+    static comparePassword(plain: string, hashed: string): boolean {        
         if(!hashed.includes("$")) return false;
         return bcrypt.compareSync(plain, hashed);
     }
@@ -35,6 +30,9 @@ export default class CryptoUtil {
     }
     
     static verifyOtp(hashed:string, otp:string):boolean{
+        // console.log(hashed);
+        // console.log(otp);
+        
         let dec = this.decryptSecret(hashed)
         let res = _2fa.verifyToken(dec, otp.toString())
         if(!res) return false

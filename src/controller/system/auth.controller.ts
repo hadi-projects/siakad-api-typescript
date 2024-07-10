@@ -11,31 +11,38 @@ import FailedResponse from '../../util/response/failed_response'
 
 export default class AuthController {
     async login(req: Request, res: Response) {
-        const request = new UserModel()
         const user_repo = new UserRepository()
-        const response = new UserModel()
+        let user = new UserModel()
 
-        request.setEmail(req.body["email"]).setPassword(req.body["password"])
+        user.setEmail(req.body["email"])
+            .setPassword(req.body["password"])
 
-        if (!request.validateLogin(request)) return FailedResponse.loginFailed(res)
+        if (!user.validateLogin(user)) return FailedResponse.loginFailed(res)
 
-        const user = await user_repo.show(Keyval.setKeyVal('email', request.getEmail()))
+        user = (await user_repo.show(Keyval.setKeyVal('email', user.getEmail())))
         if (user.getId() == null) return FailedResponse.loginFailed(res)
 
-        if (!CryptoUtil.comparePassword(request.getPassword(), user.getPassword())) return FailedResponse.loginFailed(res)
-        else if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
+        if (!CryptoUtil.comparePassword(req.body["password"], user.getPassword())) return FailedResponse.loginFailed(res)
+        if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
 
-        response.setVerifyToken(randomBytes(24).toString('hex'))
-        response.setId(user.getId())
 
-        const result = await user_repo.edit(response)
+
+        user.setVerifyToken(randomBytes(24).toString('hex'))
+            .setId(user.getId())
+            .setStatus(user.getStatus())
+            .removeName()
+            .removeSecretKey()
+            .removeOtpauthUrl()
+            .removePassword()
+            .removeCreatedAt()
+            .removeUpdatedAt()
+
+        const result = await user_repo.edit(user)
         if (result == false) return FailedResponse.loginFailed(res)
 
-        response.setStatus(user.getStatus())
-
-        return SuccessReponse.login(res, response)
+        return SuccessReponse.login(res, user)
     }
-    
+
     logout(req: Request, res: Response) {
 
         // deactivate jwt token

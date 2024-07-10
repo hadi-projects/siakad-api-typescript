@@ -20,30 +20,23 @@ export default class UserRepository {
 
     async index() {
         let users: any[] = []
-
         await (await db).query<RowDataPacket[]>(UserQuery.index())
-            .then(([data, field]) => {
-                const result = JSON.parse(JSON.stringify(data))
-                if (result == undefined) return null
-                for (var i = 0; i < result.length; i++) {
-                    console.log(result[i].role_name);
-
+        .then(([data, field]) => {
+            
+            
+            const result = JSON.parse(JSON.stringify(data))
+            if (result == undefined) return null
+            for (var i = 0; i < result.length; i++) {
                     const user = new UserModel()
-                    const role = new RoleModel()
-                    const status = new StatusModel()
-
-                    role.setId(result[i].role_id)
-                    role.setName(result[i].role_name)
-
-                    status.setId(result[i].status_id)
-                    status.setName(result[i].status_name)
 
                     user.setId(result[i].id)
                     user.setName(result[i].name)
                     user.setEmail(result[i].email)
-                    user.setRole(role)
-                    user.setStatus(status)
+                    user.setPassword(result[i].password)
+                    user.setRole(RoleModel.setRoleModel(result[i].role_id, result[i].role_name))
+                    user.setStatus(StatusModel.setStatusModel(result[i].status_id, result[i].status_name))
                     user.setCreatedAt(result[i].created_at)
+                    user.setUpdatedAt(result.updated_at)
                     users.push(user)
                 }
             })
@@ -68,9 +61,12 @@ export default class UserRepository {
     }
     
     async edit(user: UserModel): Promise<any> {
+
+        
         let status = false
         await (await db).query<RowDataPacket[]>(UserQuery.edit(user))
-            .then(([data, field]) => {
+        .then(([data, field]) => {
+                console.log(data);
                 const result = JSON.parse(JSON.stringify(data))
                 if (result.affectedRows == 0) status = false
                 else status = true
@@ -85,29 +81,21 @@ export default class UserRepository {
 
     async show(keyval: Keyval) {
         const user = new UserModel()
-        const role = new RoleModel()
-        const status = new StatusModel()
 
         await (await db).query<RowDataPacket[]>(UserQuery.show(keyval))
             .then(([data, field]) => {
                 const result = JSON.parse(JSON.stringify(data))[0]
                 if (result == undefined) return null
-
-                role.setId(result.role_id)
-                role.setName(result.role_name)
-
-                status.setId(result.status_id)
-                status.setName(result.status_name)
-
-                user.setId(result.id)
-                user.setName(result.name)
-                user.setEmail(result.email)
-                user.setPassword(result.password)
-                user.setRole(role)
-                user.setStatus(status)
-                user.setCreatedAt(result.created_at)
-                user.setUpdatedAt(result.updated_at)
-
+                    user.setId(result.id)
+                    user.setName(result.name)
+                    user.setEmail(result.email)
+                    user.setPassword(result.password)
+                    user.setSecretKey(result.secret_key)
+                    user.setOtpauthUrl(result.otpauth_url)
+                    user.setRole(RoleModel.setRoleModel(result.role_id, result.role_name))
+                    user.setStatus(StatusModel.setStatusModel(result.status_id, result.status_name))
+                    user.setCreatedAt(result.created_at)
+                    user.setUpdatedAt(result.updated_at)
             })
             .catch((err: any) => {
                 this.error_logger.error({ message: err, system: "mysql" })
@@ -132,7 +120,7 @@ export default class UserRepository {
 
     async create_otp(user: UserModel) {
         let status = false
-        await (await db).query<RowDataPacket[]>(UserQuery.create_otp(user))
+        await (await db).query<RowDataPacket[]>(UserQuery.edit(user))
             .then(([data, field]) => {
                 const result = JSON.parse(JSON.stringify(data))
                 if (result.affectedRows == 0) status = false
@@ -145,7 +133,7 @@ export default class UserRepository {
     async verified_otp(user: UserModel) {
 
         let status = false
-        await (await db).query<RowDataPacket[]>(UserQuery.verified_otp(user))
+        await (await db).query<RowDataPacket[]>(UserQuery.edit(user))
             .then(([data, field]) => {
                 const result = JSON.parse(JSON.stringify(data))
                 if (result.affectedRows == 0) status = false

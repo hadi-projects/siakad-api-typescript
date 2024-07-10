@@ -14,77 +14,61 @@ export default class OtpController {
 
     async generate2fa(req: Request, res: Response) {
         const user_repo = new UserRepository()
-        const request = new UserModel()
         const response = new UserModel()
-        const keyval = new KeyVal()
-        const status_model = new StatusModel()
 
-        request.setVerifyToken(req.body['verify_token'])
-
-        keyval.setKey('verify_token')
-        keyval.setValue(request.getVerifyToken())
-
-        if (!request.validateVToken(request)) return FailedResponse.paramRequestFailed(res, "")
-
-        const user: UserModel = await user_repo.show(keyval)
+        const user: UserModel = await user_repo.show(KeyVal.setKeyVal('verify_token', req.body['verify_token']))
         if (user.getId() == null) return FailedResponse.verifyTokenExpired(res)
         if (user.getStatus().getName() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
 
-        user.setVerifyToken(randomBytes(24).toString('hex'))
+        // when secret not exist
+        // create new one
+        
+        if (user.getSecretKey() == null && user.getOtpauthUrl() == null) {
+            const raw = CryptoUtil.generateOtp(user.getEmail())
+            const encrypted_secret = CryptoUtil.encryptSecret(raw.secret)
+            const encrypted_uri = CryptoUtil.hashedOtpauthUrl(raw.uri)
 
-        // when secret exist
-        if (user.getSecretKey() != null && user.getOtpauthUrl() != null) {
-            const dec_secret = CryptoUtil.decryptSecret(user.getSecretKey())
-            const dec_uri = CryptoUtil.decryptOtpauthUrl(user.getOtpauthUrl())
-            
-            const status = await user_repo.edit(user)
-            if (status == null) return FailedResponse.queryFailed(res, '')
-                
-                response.setSecretKey(dec_secret)
-                response.setOtpauthUrl(dec_uri)
-                response.setVerifyToken(user.getVerifyToken())
-                
-                return SuccessReponse.generate2fa(res, response)
-            }
-        const raw = CryptoUtil.generateOtp(user.getEmail())
-        const encrypted_secret = CryptoUtil.encryptSecret(raw.secret)
-        const encrypted_uri = CryptoUtil.hashedOtpauthUrl(raw.uri)
+            user.setSecretKey(encrypted_secret)
+                .setOtpauthUrl(encrypted_uri)
+                .setStatus(StatusModel.setStatusModel("2", 'VERIFY OTP'))
 
-        user.setSecretKey(encrypted_secret)
-        user.setOtpauthUrl(encrypted_uri)
-        user.setStatus(status_model) // verify otp
+            const result = await user_repo.edit(user)
+            if (result == false) return FailedResponse.queryFailed(res, '')
 
-        const result = await user_repo.create_otp(user)
-        if (result == false) return FailedResponse.queryFailed(res, '')
+            response.setSecretKey(raw.secret)
+                .setOtpauthUrl(raw.uri)
+                .setVerifyToken(randomBytes(24).toString('hex'))
 
-        const verify_token = await user_repo.create_otp(user)
-        if (verify_token == null) return FailedResponse.queryFailed(res, '')
-
-        response.setSecretKey(raw.secret)
-        response.setOtpauthUrl(raw.uri)
-        response.setVerifyToken(user.getVerifyToken())
+            return SuccessReponse.generate2fa(res, response)
+        }
+        //  else return existed otp
+        response.setSecretKey(CryptoUtil.decryptSecret(user.getSecretKey()))
+            .setOtpauthUrl(CryptoUtil.decryptOtpauthUrl(user.getOtpauthUrl()))
+            .setVerifyToken(user.getVerifyToken())
 
         return SuccessReponse.generate2fa(res, response)
     }
+
+
+
     async verify(req: Request, res: Response) {
         const user_repo = new UserRepository()
-        const request = new UserModel()
+        let user = new UserModel()
         const response = new UserModel()
-        const keyval = new KeyVal()
         const status_model = new StatusModel()
 
-        request.setVerifyToken(req.body['verify_token'])
-        request.setOtp(req.body['otp_code'])
-        if (!request.validateVerifyOtp(request)) return FailedResponse.paramRequestFailed(res, "")
+        user.setVerifyToken(req.body['verify_token'])
+            .setOtp(req.body['otp_code'])
+            
+        if (!user.validateVerifyOtp(user)) return FailedResponse.paramRequestFailed(res, "")
 
-        keyval.setKey('verify_token')
-        keyval.setValue(request.getVerifyToken())
-
-        const user: UserModel = await user_repo.show(keyval)
+        user = await user_repo.show(KeyVal.setKeyVal('verify_token', user.getVerifyToken()))
         if (user.getId() == null) return FailedResponse.queryFailed(res, '')
 
+        console.log(user);
+
         // verify otp
-        let result = CryptoUtil.verifyOtp(user.getSecretKey(), request.getOtp())
+        let result = CryptoUtil.verifyOtp(user.getSecretKey(), req.body['otp_code'])
         if (result == false) return FailedResponse.otpFailed(res)
 
         // update status 
@@ -93,7 +77,7 @@ export default class OtpController {
         user.setStatus(status_model)
         user.setOtpVerifiedAt(moment().format())
 
-        result = await user_repo.verified_otp(user)
+        result = await user_repo.edit(user)
         if (result == false) return FailedResponse.queryFailed(res, '')
 
         response.setJwtToken(JwtService.generate_jwt(user.getId()))
