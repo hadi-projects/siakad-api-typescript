@@ -1,8 +1,10 @@
 import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 import Type from './datatype';
+import MigrationsModel from '../../model/migration.model';
 
 export default class RoleHasPermissionTable {
+    static m = new MigrationsModel()
     static table_name:string = 'role_has_permissions'
     static columns:string[] = [
         'id',
@@ -25,7 +27,14 @@ export default class RoleHasPermissionTable {
             ${this.columns[5]} ${Type.datetime}
             );
         `)
-        .then(()=>console.log(this.table_name + ' table migration success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table migration failed ❌: '+e))
+        .then(() => {
+            this.m.set_name(this.table_name)
+                .set_created_at().create()
+            console.log(this.table_name + ' table migration success ✅')
+        }).catch((e) => {
+                console.log(this.table_name + ' table migration failed ❌: ' + e)
+                process.exit(0)
+
+            })
     }
 }

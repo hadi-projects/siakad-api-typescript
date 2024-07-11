@@ -5,6 +5,7 @@ export default class Model {
     protected table_name:string;
     protected columns:string[]
     public values:string[]
+    private dec = false;
 
     constructor(){}
 
@@ -18,18 +19,11 @@ export default class Model {
     set_values(values:string[]){
         this.values = values
     }
-
+    
     async create(){
-        console.log('2. create');
-        this.columns.shift()
-        console.log(this.values);
-        console.log(this.columns);
+        this.columns = this.columns.filter((d)=>d!="id")
         await (await db).query<RowDataPacket[]>(`
-
             INSERT INTO ${this.table_name} (${[this.columns]}) VALUES (${[this.values]});
         `)
-        
     }
-
-
 }

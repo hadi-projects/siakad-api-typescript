@@ -1,8 +1,10 @@
 import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 import Type from './datatype';
+import MigrationsModel from '../../model/migration.model';
 
 export default class AccessLogTable {
+    static m = new MigrationsModel()
     static table_name:string = 'access_logs'
     static columns:string[] = [
         'id',
@@ -28,7 +30,14 @@ export default class AccessLogTable {
              ${this.columns[6]} ${Type.json} ${Type.not_null},
              ${this.columns[7]} ${Type.datetime}
             );`)
-            .then(()=>console.log(this.table_name + ' table migration success ✅'))
-            .catch((e)=>console.log(this.table_name + ' table migration failed ❌: ' + e))
+            .then(() => {
+                this.m.set_name(this.table_name)
+                    .set_created_at().create()
+                console.log(this.table_name + ' table migration success ✅')
+            }).catch((e) => {
+                    console.log(this.table_name + ' table migration failed ❌: ' + e)
+                    process.exit(0)
+    
+                })
         }        
 }

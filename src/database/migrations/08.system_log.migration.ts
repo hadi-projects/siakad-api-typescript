@@ -1,8 +1,10 @@
 import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 import Type from './datatype';
+import MigrationsModel from '../../model/migration.model';
 
 export default class SystemLogTable {
+    static m = new MigrationsModel()
     static table_name:string = 'system_logs'
     static columns:string[] = [
         'id',
@@ -24,7 +26,14 @@ export default class SystemLogTable {
             ${this.columns[4]} ${Type.varchar()} ${Type.not_null},
             ${this.columns[5]} ${Type.datetime}
             );`)
-            .then(()=>console.log(this.table_name + ' table migration success ✅'))
-            .catch((e)=>console.log(this.table_name + ' table migration failed ❌ :' + e))
+            .then(() => {
+                this.m.set_name(this.table_name)
+                    .set_created_at().create()
+                console.log(this.table_name + ' table migration success ✅')
+            }).catch((e) => {
+                    console.log(this.table_name + ' table migration failed ❌: ' + e)
+                    process.exit(0)
+    
+                })
         }        
 }
