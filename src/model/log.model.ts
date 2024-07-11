@@ -1,7 +1,18 @@
+import moment from "moment"
+import AccessLogTable from "../database/migrations/07.access_log.migration"
 import AccessModel from "./access.model"
+import Model from "./model"
 import UserModel from "./user.model"
+import d from 'mysql2'
 
-export default class LogModel {
+export default class LogModel extends Model {
+
+    constructor() {
+        super()
+        super.set_table_name(AccessLogTable.table_name)
+        super.set_columns(AccessLogTable.columns)
+    }
+
     private ip:string
     private url!:string
     private method!:string
@@ -12,76 +23,104 @@ export default class LogModel {
     private access!:AccessModel
     private user!:UserModel
 
-    public getRequest_body(): string {
+    // values
+    v: string[] = []
+
+    public get_request_body(): string {
         return this.request_body;
     }
 
-    public setRequest_body(request_body: string): void {
+    public set_request_body(request_body: string): LogModel {
         this.request_body = request_body;
+        return this
     }
 
-    public getAccess(): AccessModel {
+    public get_access(): AccessModel {
         return this.access;
     }
 
-    public setAccess(access: AccessModel): void {
+    public setAccess(access: AccessModel): LogModel {
         this.access = access;
+        this.v.push(d.escape(access.getResource()))
+        this.values = this.v
+        return this
     }
 
-    public getUser(): UserModel {
+    public get_user(): UserModel {
         return this.user;
     }
 
-    public setUser(user: UserModel): void {
+    public set_user(user: UserModel): LogModel {
         this.user = user;
+        this.v.push(d.escape(user.getName()))
+        this.values = this.v
+        return this
     }
 
    
-    public getUrl(): string {
+    public get_url(): string {
         return this.url;
     }
 
-    public setUrl(url: string): void {
+    public set_url(url: string): LogModel {
         this.url = url;
+        this.v.push(d.escape(url))
+        this.values = this.v
+        return this
     }
 
-    public getIp(): string {
+    public get_ip(): string {
         return this.ip;
     }
 
-    public setIp(ip: string): void {
+    public set_ip(ip: string): LogModel {
         this.ip = ip;
+        this.v.push(d.escape(ip))
+        this.values = this.v
+        return this
     }
 
-    public getMethod(): string {
+    public get_method(): string {
         return this.method;
     }
 
-    public setMethod(method: string): void {
-        this.method = method;
+    public set_method(method: string): LogModel {
+        this.endpoint = method;
+        this.v.push(d.escape(method))
+        this.values = this.v
+        return this
     }
 
-    public getEndpoint(): string {
+    public get_endpoint(): string {
         return this.endpoint;
     }
 
-    public setEndpoint(endpoint: string): void {
+    public set_endpoint(endpoint: string): LogModel {
         this.endpoint = endpoint;
+        this.v.push(d.escape(endpoint))
+        this.values = this.v
+        return this
     }
 
-    public getTimestamp(): string {
+    public get_timestamp(): string {
         return this.timestamp;
     }
 
-    public setTimestamp(timestamp: string): void {
+    public set_timestamp(timestamp: string): LogModel {
         this.timestamp = timestamp;
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.values.push(d.escape(date))
+        return this
     }
 
-    public getHeader(): Object {
+    public get_header(): Object {
         return this.header;
     }
 
-    public setHeader(header: Object): void {
+    public set_header(header: Object): LogModel {
         this.header = header;
+        this.v.push(d.escape(header))
+        this.values = this.v
+        return this
     }
 }

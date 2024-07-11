@@ -8,9 +8,11 @@ export default class AccessLogTable {
     static table_name:string = 'access_logs'
     static columns:string[] = [
         'id',
-        'endpoint', 
+        'url', 
+        'enpoint', 
         'ip',
         'method',
+        'access', 
         'user',
         'header',
         'body',
@@ -24,11 +26,13 @@ export default class AccessLogTable {
              ${this.columns[0]} ${Type.int} ${Type.primary_key} ${Type.auto_increment},
              ${this.columns[1]} ${Type.varchar()} ${Type.not_null},
              ${this.columns[2]} ${Type.varchar()} ${Type.not_null},
-             ${this.columns[3]} ${Type.int} ${Type.not_null},
+             ${this.columns[3]} ${Type.varchar()} ${Type.not_null},
              ${this.columns[4]} ${Type.varchar()} ${Type.not_null},
              ${this.columns[5]} ${Type.json} ${Type.not_null},
              ${this.columns[6]} ${Type.json} ${Type.not_null},
-             ${this.columns[7]} ${Type.datetime}
+             ${this.columns[7]} ${Type.json} ${Type.not_null},
+             ${this.columns[8]} ${Type.json} ${Type.not_null},
+             ${this.columns[9]} ${Type.datetime}
             );`)
             .then(() => {
                 this.m.set_name(this.table_name)

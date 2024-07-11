@@ -7,17 +7,15 @@ import JWTMiddleware from "./jwt.middleware";
 
 export default class Middleware {
     async check(req: express.Request, res: express.Response, next: express.NextFunction) {
+        // api key
+        // jwt 
+        // permission log
+        // access log
+        if (ApiKeyMiddleware.check(req, res) == false) return FailedResponse.tokenFailed(res)
+        if (await PermissionMiddleware.check(req) == false) return FailedResponse.failedPermission(res, '')
+        if (JWTMiddleware.check(req, res, next) != '') return FailedResponse.jwtFailed(res, '')
 
         AccessLogMiddleware.log(req, res)
-
-        let result:any = ApiKeyMiddleware.check(req, res)
-        if (result == false) return FailedResponse.tokenFailed(res)
-
-        result = await PermissionMiddleware.check(req)
-        if (result == false) return FailedResponse.failedPermission(res, '')
-
-        result = JWTMiddleware.check(req, res, next)
-        if (result != '') return FailedResponse.jwtFailed(res, result)
 
         next()
 
