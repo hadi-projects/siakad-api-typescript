@@ -19,7 +19,7 @@ export default class RoleHasPermissionTable {
         await (await db).query(`DROP TABLE IF EXISTS ${this.table_name}`);
         await (await db).query<RowDataPacket[]>(`
             CREATE TABLE ${this.table_name} (
-            ${this.columns[0]} ${Type.int} ${Type.primary_key} ${Type.primary_key},
+            ${this.columns[0]} ${Type.int} ${Type.primary_key} ${Type.auto_increment},
             ${this.columns[1]} ${Type.int} ${Type.not_null},
             ${this.columns[2]} ${Type.int} ${Type.not_null},
             ${this.columns[3]} ${Type.int} ${Type.not_null},

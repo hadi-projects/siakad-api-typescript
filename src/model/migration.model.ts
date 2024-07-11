@@ -9,6 +9,8 @@ export default class MigrationsModel extends Model {
         super.set_table_name(Migrations.table_name)
         super.set_columns(Migrations.columns)
     }
+
+    // values
     v: string[] = []
 
     public set_name(name: string): MigrationsModel {

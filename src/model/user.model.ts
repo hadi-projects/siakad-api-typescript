@@ -1,9 +1,10 @@
+import moment from "moment"
 import UserTable from "../database/migrations/01.user.migration"
 import Action from "../enum/action.enum"
 import Model from "./model"
 import RoleModel from "./role.model"
 import StatusModel from "./status.model"
-
+import d from 'mysql2'
 
 class UserModel extends Model {
     private id!: any
@@ -16,6 +17,7 @@ class UserModel extends Model {
     private otpauth_url!: any
     private verify_token!: any
     private otp_verified_at!: any
+    private email_verified_at!: any
     private otp!: any
     private action: Action
     private jwt_token: object
@@ -29,8 +31,8 @@ class UserModel extends Model {
         super.set_columns(UserTable.columns)
     }
 
-
-
+    // values
+    v: string[] = []
 
     setId(id: string): UserModel {
         this.id = id
@@ -38,41 +40,57 @@ class UserModel extends Model {
     }
 
     setName(name: string): UserModel {
-        this.name = name
+        this.name = name;
+        this.v.push(d.escape(name))
+        this.values = this.v
         return this
     }
 
     setEmail(email: any): UserModel {
-        this.email = email
+        this.email = email;
+        this.v.push(d.escape(email))
+        this.values = this.v
         return this
     }
 
     setPassword(password: string): UserModel {
-        this.password = password
+        this.password = password;
+        this.v.push(d.escape(password))
+        this.values = this.v
         return this
     }
 
     setRole(role: RoleModel): UserModel {
-        this.role = role
+        this.role = role;
+        this.v.push(d.escape(role.get_id()))
+        this.values = this.v
         return this
     }
-
+    
     setStatus(status: StatusModel): UserModel {
         this.status = status
+        this.v.push(d.escape(status.get_id()))
+        this.values = this.v
         return this
     }
 
     setSecretKey(secret_key: string): UserModel {
-        this.secret_key = secret_key
+        this.secret_key = secret_key;
+        this.v.push(d.escape(secret_key))
+        this.values = this.v
         return this
     }
     setOtpauthUrl(otpauth_url: string): UserModel {
-        this.otpauth_url = otpauth_url
+        this.otpauth_url = otpauth_url;
+        this.v.push(d.escape(otpauth_url))
+        this.values = this.v
         return this
     }
 
     setVerifyToken(verify_token: string): UserModel {
-        this.verify_token = verify_token
+        this.verify_token = verify_token;
+        this.v.push(d.escape(verify_token))
+        this.values = this.v
         return this
     }
     setOtp(otp: string): UserModel {
@@ -90,16 +108,33 @@ class UserModel extends Model {
         return this
     }
 
-    setOtpVerifiedAt(otp_verified_at: string): UserModel {
-        this.otp_verified_at = otp_verified_at
+    setOtpVerifiedAt(): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.otp_verified_at = date;
+        this.v.push(d.escape(date))
+        this.values = this.v
         return this
     }
-    setCreatedAt(created_at: string): UserModel {
-        this.created_at = created_at
+    setEmailVerifiedAt(): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.email_verified_at = date;
+        this.v.push(d.escape(date))
+        this.values = this.v
         return this
     }
-    setUpdatedAt(updated_at: string): UserModel {
-        this.updated_at = updated_at
+
+    public set_created_at(): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.created_at = date
+        this.v.push(d.escape((date)))
+        this.values = this.v
+        return this
+    }
+    public set_updated_at(): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.updated_at = date
+        this.v.push((d.escape(date)))
+        this.values = this.v
         return this
     }
 
@@ -243,7 +278,7 @@ class UserModel extends Model {
     }
 
     validateCreate(user: UserModel): boolean {
-        if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole().getId() == null) {
+        if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole().get_id() == null) {
             return false
         }
         return true
@@ -254,7 +289,7 @@ class UserModel extends Model {
         if (user.getId() == null) {
             console.log('failed id')
             return false
-        } else if ((user.getName() == null && user.getEmail() == null && user.getPassword() == null && user.getRole().getId() == null)) {
+        } else if ((user.getName() == null && user.getEmail() == null && user.getPassword() == null && user.getRole().get_id() == null)) {
             console.log('failed data')
             return false
         }

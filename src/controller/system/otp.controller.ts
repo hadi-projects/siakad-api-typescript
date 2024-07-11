@@ -18,7 +18,7 @@ export default class OtpController {
 
         const user: UserModel = await user_repo.show(KeyVal.setKeyVal('verify_token', req.body['verify_token']))
         if (user.getId() == null) return FailedResponse.verifyTokenExpired(res)
-        if (user.getStatus().getName() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
+        if (user.getStatus().get_name() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
 
         // when secret not exist
         // create new one
@@ -30,7 +30,7 @@ export default class OtpController {
 
             user.setSecretKey(encrypted_secret)
                 .setOtpauthUrl(encrypted_uri)
-                .setStatus(StatusModel.setStatusModel("2", 'VERIFY OTP'))
+                .setStatus(new StatusModel().set_id("2"))
 
             const result = await user_repo.edit(user)
             if (result == false) return FailedResponse.queryFailed(res, '')
@@ -55,11 +55,10 @@ export default class OtpController {
         const user_repo = new UserRepository()
         let user = new UserModel()
         const response = new UserModel()
-        const status_model = new StatusModel()
 
         user.setVerifyToken(req.body['verify_token'])
             .setOtp(req.body['otp_code'])
-            
+
         if (!user.validateVerifyOtp(user)) return FailedResponse.paramRequestFailed(res, "")
 
         user = await user_repo.show(KeyVal.setKeyVal('verify_token', user.getVerifyToken()))
@@ -73,9 +72,8 @@ export default class OtpController {
 
         // update status 
         user.setVerifyToken('')
-        status_model.setStatus_id("3") // active
-        user.setStatus(status_model)
-        user.setOtpVerifiedAt(moment().format())
+        user.setStatus(new StatusModel().set_id("3"))
+        user.setOtpVerifiedAt()
 
         result = await user_repo.edit(user)
         if (result == false) return FailedResponse.queryFailed(res, '')

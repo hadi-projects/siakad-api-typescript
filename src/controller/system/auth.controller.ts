@@ -36,7 +36,7 @@ export default class AuthController {
         if (user.getId() == null) return FailedResponse.loginFailed(res)
 
         if (!CryptoUtil.comparePassword(req.body["password"], user.getPassword())) return FailedResponse.loginFailed(res)
-        if (user.getStatus().getName().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
+        if (user.getStatus().get_name().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
 
 
 

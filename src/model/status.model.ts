@@ -1,49 +1,80 @@
-export default class StatusModel {
+import moment from "moment"
+import StatusTable from "../database/migrations/03.status.migration"
+import Model from "./model"
+import d from 'mysql2'
+
+export default class StatusModel extends Model {
+
+    constructor() {
+        super()
+        super.set_table_name(StatusTable.table_name)
+        super.set_columns(StatusTable.columns)
+    }
+
     private id: string
     private name: string 
     private status_key: string 
     private status_id: string 
 
-    public getId(): string {
+    // values
+    v: string[] = []
+
+    public get_id(): string {
         return this.id;
     }
 
-    public setId(id: string): void {
+    public set_id(id: string): StatusModel {
         this.id = id;
+        return this
     }
 
-    public getName(): string {
+    public get_name(): string {
         return this.name;
     }
 
-    public setName(name: string): void {
+    public set_name(name: string): StatusModel {
         this.name = name;
+        this.v.push(d.escape(name))
+        this.values = this.v
+        return this
     }
 
-    public getStatus_key(): string {
+    public get_status_key(): string {
         return this.status_key;
     }
 
-    public setStatus_key(status_key: string): void {
+    public set_status_key(status_key: string): StatusModel {
         this.status_key = status_key;
+        this.v.push(d.escape(status_key))
+        this.values = this.v
+        return this
     }
 
-    public getStatus_id(): string {
+    public get_status_id(): string {
         return this.status_id;
     }
 
-    public setStatus_id(status_id: string): void {
+    public set_status_id(status_id: string): StatusModel {
         this.status_id = status_id;
+        this.v.push(d.escape(status_id))
+        this.values = this.v
+        return this
     }
 
+    public set_created_at(): StatusModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.v.push(d.escape((date)))
+        this.values = this.v
+        return this
+    }
+    public set_updated_at(): StatusModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.v.push((d.escape(date)))
+        this.values = this.v
+        return this
+    }
 
     public static blankStatus():StatusModel{
         return new StatusModel()
-    }
-    public static setStatusModel (id:string, name:string):StatusModel{
-        const status = new StatusModel()
-        status.setId(id)
-        status.setName(name)
-        return status
     }
 }

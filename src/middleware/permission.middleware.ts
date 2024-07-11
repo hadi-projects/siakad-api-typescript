@@ -1,7 +1,7 @@
 import express from 'express'
 import AccessLogMiddleware from './access_log.middleware'
 import PermissionRepository from '../repository/permission.repository'
-import PermissionRepositoryModel from '../model/permissionrepository.model'
+import PermissionRepositoryModel from '../model/rolehaspermission.model'
 
 
 export default class PermissionMiddleware {
@@ -12,7 +12,7 @@ export default class PermissionMiddleware {
         const permissionrepository_model = new PermissionRepositoryModel()
 
 
-        permissionrepository_model.setRole_name((await user).getRole().getName())
+        permissionrepository_model.setRole_name((await user).getRole().get_name())
         permissionrepository_model.setResource_name(access.getResource())
         permissionrepository_model.setPermission_name(access.getAction())
 

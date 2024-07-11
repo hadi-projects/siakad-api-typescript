@@ -1,23 +1,37 @@
-import { RowDataPacket } from 'mysql2/promise'
+import StatusModel from '../../model/status.model'
 import db from '../database'
-import moment from 'moment'
+import StatusTable from '../migrations/03.status.migration'
 
 export default class StatusSeeder {
-    static table_name:string = 'statuses'
-    static datetime = moment().format().split("+")[0].replace("T", " ")
     
-    
+    static data:StatusModel[] = [
+        new StatusModel().set_name("GENERATE OTP")
+            .set_status_key("user")
+            .set_status_id("1")
+            .set_created_at()
+            .set_updated_at(),
+        new StatusModel().set_name("VERIFY OTP")
+            .set_status_key("user")
+            .set_status_id("2")
+            .set_created_at()
+            .set_updated_at(),
+        new StatusModel().set_name("ACTIVE")
+            .set_status_key("user")
+            .set_status_id("3")
+            .set_created_at()
+            .set_updated_at(),
+        new StatusModel().set_name("FREEZED")
+            .set_status_key("user")
+            .set_status_id("4")
+            .set_created_at()
+            .set_updated_at(),
+    ]
+
     static async seed(){
-        await (await db).query<RowDataPacket[]>(`
-            INSERT INTO ${this.table_name} (
-                status_key, status_id, name, created_at, updated_at
-            ) VALUES 
-            ('user' , 1, 'GENERATE OTP', '${this.datetime}', '${this.datetime}'),
-            ('user' , 2, 'VERIFY OTP', '${this.datetime}', '${this.datetime}'),
-            ('user' , 3, 'ACTIVE', '${this.datetime}', '${this.datetime}'),
-            ('user' , 4, 'FREEZED', '${this.datetime}', '${this.datetime}');
-        `)
-        .then(()=>console.log(this.table_name + ' table seeding success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table seeding failed ❌'+e))
+        await (await db).query(`DELETE FROM ${StatusTable.table_name}`)
+        await (await db).query(`ALTER TABLE ${StatusTable.table_name} AUTO_INCREMENT = 1`)
+        for(var i=0;i<this.data.length;i++){
+            await this.data[i].create()
+        }
     }
 }

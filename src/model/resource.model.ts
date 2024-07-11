@@ -1,14 +1,14 @@
 import moment from "moment"
-import RoleTable from "../database/migrations/02.role.migration"
 import Model from "./model"
 import d from 'mysql2'
+import ResourceTable from "../database/migrations/05.resources.migration"
 
-export default class RoleModel extends Model{
+export default class ResourceModel extends Model{
 
     constructor() {
         super()
-        super.set_table_name(RoleTable.table_name)
-        super.set_columns(RoleTable.columns)
+        super.set_table_name(ResourceTable.table_name)
+        super.set_columns(ResourceTable.columns)
     }
 
     
@@ -22,7 +22,7 @@ export default class RoleModel extends Model{
         return this.id;
     }
 
-    public set_id(id: string): RoleModel {
+    public set_id(id: string): ResourceModel {
         this.id = id;
         return this
     }
@@ -31,31 +31,27 @@ export default class RoleModel extends Model{
         return this.name; 
     }
 
-    public set_name(name: string):RoleModel {
+    public set_name(name: string):ResourceModel {
         this.name = name;
         this.v.push(d.escape(name))
         this.values = this.v
         return this
     }
     
-    public static blank_role():RoleModel{
-        return new RoleModel()
-    }
-    
-    public static setRoleModel(id:string, name:string):RoleModel{
-        const role = new RoleModel()
+    public static setRoleModel(id:string, name:string):ResourceModel{
+        const role = new ResourceModel()
         role.set_id(id)
         role.set_name(name)
         return role
     }
     
-    public set_created_at(): RoleModel {
+    public set_created_at(): ResourceModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push(d.escape((date)))
         this.values = this.v
         return this
     }
-    public set_updated_at(): RoleModel {
+    public set_updated_at(): ResourceModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push((d.escape(date)))
         this.values = this.v

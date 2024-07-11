@@ -1,37 +1,72 @@
 import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 import moment from 'moment'
+import ResourceModel from '../../model/resource.model'
+import ResourceTable from '../migrations/05.resources.migration'
 
 export default class ResourceSeeder {
-    static table_name:string = 'resources'
-    static datetime = moment().format().split("+")[0].replace("T", " ")
-    
-    
-    static async seed(){
-        await (await db).query<RowDataPacket[]>(`
-            INSERT INTO ${this.table_name} (
-                name, created_at, updated_at
-            ) VALUES 
-            ('auth', '${this.datetime}', '${this.datetime}'),
-            ('user', '${this.datetime}', '${this.datetime}'),
-            ('otp', '${this.datetime}', '${this.datetime}'),
-            ('kuangan', '${this.datetime}', '${this.datetime}'),
-            ('kurikulum', '${this.datetime}', '${this.datetime}'),
-            ('laporan', '${this.datetime}', '${this.datetime}'),
-            ('jurnal', '${this.datetime}', '${this.datetime}'),
-            ('penilaian', '${this.datetime}', '${this.datetime}'),
-            ('cuti', '${this.datetime}', '${this.datetime}'),
-            ('jadwal', '${this.datetime}', '${this.datetime}'),
-            ('khs', '${this.datetime}', '${this.datetime}'),
-            ('krs', '${this.datetime}', '${this.datetime}'),
-            ('nilai', '${this.datetime}', '${this.datetime}'),
-            ('pembayaran', '${this.datetime}', '${this.datetime}'),
-            ('tugas', '${this.datetime}', '${this.datetime}'),
-            ('wisuda', '${this.datetime}', '${this.datetime}'),
-            ('notifikasi', '${this.datetime}', '${this.datetime}'),
-            ('util', '${this.datetime}', '${this.datetime}');
-        `)
-        .then(()=>console.log(this.table_name + ' table seeding success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table seeding failed ❌'+e))
+    static data: ResourceModel[] = [
+        new ResourceModel().set_name("auth")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("user")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("otp")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("kuangan")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("kurikulum")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("laporan")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("jurnal")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("penilaian")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("cuti")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("jadwal")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("khs")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("krs")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("nilai")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("pembayaran")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("tugas")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("wisuda")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("notifikasi")
+            .set_created_at()
+            .set_updated_at(),
+        new ResourceModel().set_name("util")
+            .set_created_at()
+            .set_updated_at(),
+    ]
+
+    static async seed() {
+        await (await db).query(`DELETE FROM ${ResourceTable.table_name}`)
+        await (await db).query(`ALTER TABLE ${ResourceTable.table_name} AUTO_INCREMENT = 1`)
+        for (var i = 0; i < this.data.length; i++) {
+            await this.data[i].create()
+        }
     }
 }

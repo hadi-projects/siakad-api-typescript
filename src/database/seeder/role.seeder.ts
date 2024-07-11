@@ -1,24 +1,22 @@
-import { RowDataPacket } from 'mysql2/promise'
+import RoleModel from '../../model/role.model'
 import db from '../database'
-import moment from 'moment'
+import RoleTable from '../migrations/02.role.migration'
 
 export default class RoleSeeder {
-    static table_name:string = 'roles'
-    static datetime = moment().format().split("+")[0].replace("T", " ")
-
     
+    static data:RoleModel[] = [
+        new RoleModel().set_name("root").set_created_at().set_updated_at(),
+        new RoleModel().set_name("admin").set_created_at().set_updated_at(),
+        new RoleModel().set_name("member").set_created_at().set_updated_at(),
+        new RoleModel().set_name("mahasiswa").set_created_at().set_updated_at(),
+        new RoleModel().set_name("auth").set_created_at().set_updated_at()
+    ]
+
     static async seed(){
-        await (await db).query<RowDataPacket[]>(`
-            INSERT INTO ${this.table_name} (
-                name, created_at, updated_at
-            ) VALUES 
-            ('root', '${this.datetime}', '${this.datetime}'),
-            ('admin', '${this.datetime}', '${this.datetime}'),
-            ('member', '${this.datetime}', '${this.datetime}'),
-            ('mahasiswa', '${this.datetime}', '${this.datetime}'),
-            ('auth', '${this.datetime}', '${this.datetime}');
-        `)
-        .then(()=>console.log(this.table_name + ' table seeding success ✅'))
-        .catch((e)=>console.log(this.table_name + ' table seeding failed ❌'+e))
+        await (await db).query(`DELETE FROM ${RoleTable.table_name}`)
+        await (await db).query(`ALTER TABLE ${RoleTable.table_name} AUTO_INCREMENT = 1`)
+        for(var i=0;i<this.data.length;i++){
+            await this.data[i].create()
+        }
     }
 }

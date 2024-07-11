@@ -5,7 +5,6 @@ export default class Model {
     protected table_name:string;
     protected columns:string[]
     public values:string[]
-    private dec = false;
 
     constructor(){}
 
@@ -24,6 +23,6 @@ export default class Model {
         this.columns = this.columns.filter((d)=>d!="id")
         await (await db).query<RowDataPacket[]>(`
             INSERT INTO ${this.table_name} (${[this.columns]}) VALUES (${[this.values]});
-        `)
+        `).then(()=>console.log('done: '+this.values)).catch((e)=>console.log('error: '+e))
     }
 }

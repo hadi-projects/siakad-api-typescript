@@ -1,5 +1,5 @@
 import d from 'mysql2'
-import PermissionRepositoryModel from '../../model/permissionrepository.model'
+import PermissionRepositoryModel from '../../model/rolehaspermission.model'
 
 export default class PermissionQuery {
     static index(permissions: PermissionRepositoryModel) {
@@ -15,9 +15,9 @@ export default class PermissionQuery {
         	ON resources.id = role_has_permissions.resource_id 
         JOIN permissions 
         	ON permissions.id  = role_has_permissions.permission_id 
-        WHERE roles.name = ${d.escape(permissions.getRole_name())}
-            AND resources.name = ${d.escape(permissions.getResource_name())}
-            AND permissions.name = ${d.escape(permissions.getPermission_name())}
+        WHERE roles.id = ${d.escape(permissions.get_role_id())}
+            AND resources.id = ${d.escape(permissions.get_resource_id())}
+            AND permissions.id = ${d.escape(permissions.get_permission_id())}
         `
         }
 }

@@ -1,7 +1,7 @@
 import d from '../database/database'
 import Logger from "../service/logger";
 import PermissionQuery from '../database/query/permission.query';
-import PermissionRepositoryModel from '../model/permissionrepository.model';
+import PermissionRepositoryModel from '../model/rolehaspermission.model';
 import { RowDataPacket } from 'mysql2/promise';
 
 export default class AuthRepository {

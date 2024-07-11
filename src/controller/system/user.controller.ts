@@ -59,7 +59,7 @@ export default class UserController {
         request.setName(req.body['name'])
         request.setEmail(req.body['email'])
         request.setPassword(req.body['password'])
-        request.setStatus(StatusModel.setStatusModel(req.body['status_id'], ''))
+        request.setStatus(new StatusModel().set_id(req.body['status_id']))
         request.setRole(RoleModel.setRoleModel(req.body['role_id'], ''))
 
         if(request.validateEdit(request)==false) return FailedResponse.validationFailed(res)
