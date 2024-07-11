@@ -1,9 +1,11 @@
+import UserTable from "../database/migrations/01.user.migration"
 import Action from "../enum/action.enum"
+import Model from "./model"
 import RoleModel from "./role.model"
 import StatusModel from "./status.model"
 
 
-class UserModel {
+class UserModel extends Model {
     private id!: any
     private name!: any
     private email!: any
@@ -15,83 +17,92 @@ class UserModel {
     private verify_token!: any
     private otp_verified_at!: any
     private otp!: any
-    private action:Action
-    private jwt_token:object
-    private created_at:any
-    private updated_at:any
+    private action: Action
+    private jwt_token: object
+    private created_at: any
+    private updated_at: any
 
 
-    setId(id: string):UserModel {
+    constructor() {
+        super()
+        super.set_table_name(UserTable.table_name)
+        super.set_columns(UserTable.columns)
+    }
+
+
+
+
+    setId(id: string): UserModel {
         this.id = id
         return this
     }
 
-    setName(name: string):UserModel {
+    setName(name: string): UserModel {
         this.name = name
         return this
     }
-    
-    setEmail(email: any):UserModel  {
+
+    setEmail(email: any): UserModel {
         this.email = email
         return this
     }
-    
-    setPassword(password: string):UserModel {
+
+    setPassword(password: string): UserModel {
         this.password = password
         return this
     }
-    
-    setRole(role: RoleModel):UserModel {
+
+    setRole(role: RoleModel): UserModel {
         this.role = role
         return this
     }
-    
-    setStatus(status: StatusModel):UserModel {
+
+    setStatus(status: StatusModel): UserModel {
         this.status = status
         return this
     }
-    
-    setSecretKey(secret_key: string):UserModel {
+
+    setSecretKey(secret_key: string): UserModel {
         this.secret_key = secret_key
         return this
     }
-    setOtpauthUrl(otpauth_url: string):UserModel {
+    setOtpauthUrl(otpauth_url: string): UserModel {
         this.otpauth_url = otpauth_url
         return this
     }
-    
-    setVerifyToken(verify_token: string):UserModel {
+
+    setVerifyToken(verify_token: string): UserModel {
         this.verify_token = verify_token
         return this
     }
-    setOtp(otp: string):UserModel {
+    setOtp(otp: string): UserModel {
         this.otp = otp
         return this
     }
-    
+
     setJwtToken(jwt_token: object) {
         this.jwt_token = jwt_token
         return this
     }
-    
-    setAction(action:Action):UserModel {
-        this.action = action 
+
+    setAction(action: Action): UserModel {
+        this.action = action
         return this
     }
-    
-    setOtpVerifiedAt(otp_verified_at:string):UserModel {
-        this.otp_verified_at = otp_verified_at 
+
+    setOtpVerifiedAt(otp_verified_at: string): UserModel {
+        this.otp_verified_at = otp_verified_at
         return this
     }
-    setCreatedAt(created_at:string):UserModel {
+    setCreatedAt(created_at: string): UserModel {
         this.created_at = created_at
         return this
     }
-    setUpdatedAt(updated_at:string):UserModel {
+    setUpdatedAt(updated_at: string): UserModel {
         this.updated_at = updated_at
         return this
     }
-    
+
     getId(): string {
         return this.id
     }
@@ -120,7 +131,7 @@ class UserModel {
     getOtpVerifiedAt(): string {
         return this.otp_verified_at
     }
-   
+
     getJwtToken(): object {
         return this.jwt_token
     }
@@ -135,14 +146,14 @@ class UserModel {
         return this
     }
 
-    getAction(){
+    getAction() {
         return this.action
     }
 
-    getCreatedAt():string{
+    getCreatedAt(): string {
         return this.created_at
     }
-    getUpdatedAt():string{
+    getUpdatedAt(): string {
         return this.updated_at
     }
 
@@ -176,7 +187,7 @@ class UserModel {
         delete this.otp_verified_at
         return this
     }
-   
+
     removeVerifyToken(): UserModel {
         delete this.verify_token
         return this
@@ -186,11 +197,11 @@ class UserModel {
         return this
     }
 
-    removeCreatedAt():UserModel{
+    removeCreatedAt(): UserModel {
         delete this.created_at
         return this
     }
-    removeUpdatedAt():UserModel{
+    removeUpdatedAt(): UserModel {
         delete this.updated_at
         return this
     }
@@ -217,7 +228,7 @@ class UserModel {
     }
     validateVerifyOtp(user: UserModel): boolean {
         if (
-            user.getVerifyToken() == null || user.getVerifyToken() == ""||
+            user.getVerifyToken() == null || user.getVerifyToken() == "" ||
             user.getOtp() == null || user.getOtp() == ""
         ) {
             return false
@@ -225,45 +236,45 @@ class UserModel {
         return true
     }
     validateFreeze(user: UserModel): boolean {
-        if (user.getId() == null || user.getStatus() == null ) {
+        if (user.getId() == null || user.getStatus() == null) {
             return false
         }
         return true
     }
 
-    validateCreate(user:UserModel):boolean{
-        if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole().getId() == null){
+    validateCreate(user: UserModel): boolean {
+        if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole().getId() == null) {
             return false
         }
         return true
     }
-    
-    validateEdit(user:UserModel):boolean{
+
+    validateEdit(user: UserModel): boolean {
         console.log(user)
-        if(user.getId() == null){
+        if (user.getId() == null) {
             console.log('failed id')
             return false
-        }else if((user.getName() == null && user.getEmail() == null && user.getPassword() == null && user.getRole().getId() == null)){
+        } else if ((user.getName() == null && user.getEmail() == null && user.getPassword() == null && user.getRole().getId() == null)) {
             console.log('failed data')
             return false
         }
         return true
     }
-    validateId(user:UserModel):boolean{
-        if(user.getId() == null){
+    validateId(user: UserModel): boolean {
+        if (user.getId() == null) {
             return false
         }
         return true
     }
-    validateResetPassword(user:UserModel):boolean{
-        if(user.getId() == null || user.getPassword() == null){
+    validateResetPassword(user: UserModel): boolean {
+        if (user.getId() == null || user.getPassword() == null) {
             return false
         }
         return true
     }
 
-    static instanse:UserModel;
-    
+    static instanse: UserModel;
+
     public static get instance(): UserModel {
         if (!UserModel.instance) {
             UserModel.instanse = new UserModel();

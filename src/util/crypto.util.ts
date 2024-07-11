@@ -30,9 +30,6 @@ export default class CryptoUtil {
     }
     
     static verifyOtp(hashed:string, otp:string):boolean{
-        // console.log(hashed);
-        // console.log(otp);
-        
         let dec = this.decryptSecret(hashed)
         let res = _2fa.verifyToken(dec, otp.toString())
         if(!res) return false

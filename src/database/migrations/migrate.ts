@@ -7,8 +7,10 @@ import PermissionTable from "./06.permission.migration"
 import AccessLogTable from "./07.access_log.migration"
 import SystemLogTable from "./08.system_log.migration"
 import ForeignTable from "./foreignkey.migration"
+import Migrations from "./migrations"
 
 async function main(){
+    await Migrations.migrate()
     await UserTable.migrate()
     await RoleTable.migrate()
     await StatusTable.migrate()

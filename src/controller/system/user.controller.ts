@@ -16,7 +16,7 @@ export default class UserController {
         const user_repo =  new UserRepository()
         
         const users = await user_repo.index()    
-        return SuccessReponse.getDataSuccess(res, users, JwtService.generate_jwt(''))
+        return SuccessReponse.getDataSuccess(res, users, JwtService.generate_jwt("1", req.headers.authorization?.split(" ")[1]))
     }
 
 

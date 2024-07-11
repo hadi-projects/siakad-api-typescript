@@ -7,10 +7,23 @@ import CryptoUtil from '../../util/crypto.util'
 import SuccessReponse from '../../util/response/success_response'
 import { randomBytes } from 'crypto'
 import FailedResponse from '../../util/response/failed_response'
+// import OtpModel from '../../model/otp.model'
 
 
 export default class AuthController {
     async login(req: Request, res: Response) {
+
+
+        //
+
+        console.log('---');
+        
+        
+        // const otp = new OtpModel()
+        // otp.create()
+        
+        console.log('---');
+        //
         const user_repo = new UserRepository()
         let user = new UserModel()
 

@@ -28,11 +28,11 @@ static tokenFailed(res: Response) {
     })
 }
 
-static jwtFailed(res: Response) {
+static jwtFailed(res: Response, msg:string="") {
     return res.json({
         code: 1005,
         status: "failed",
-        message: "jwt auth failed"
+        message: "jwt auth failed "+msg
     })
 }
 

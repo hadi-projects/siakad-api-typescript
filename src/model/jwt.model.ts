@@ -4,16 +4,18 @@ export default class JwtModel{
     private should_refresh:boolean
 
 
-    public setToken(token:string){
+    public setToken(token:string):JwtModel{
         this.token = token;
+        return this
     }
-
+    
     public getToken() {
         return this.token
     }
-   
-    public setShouldRefresh(should_refresh:boolean){
+    
+    public setShouldRefresh(should_refresh:boolean):JwtModel{
         this.should_refresh = should_refresh;
+        return this
     }
 
     public getShouldRefresh() {

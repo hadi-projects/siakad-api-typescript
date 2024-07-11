@@ -2,7 +2,7 @@ import express from 'express'
 
 
 export default class ApiKeyMiddleware {
-    check(req:express.Request, res:express.Response){
+    public static check(req:express.Request, res:express.Response){
         
         if(req.url.includes('/ping')) return true
 
