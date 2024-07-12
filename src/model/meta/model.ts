@@ -6,30 +6,20 @@ import d from 'mysql2'
 
 
 export default class Model {
-    protected table_name: string;
+    table_name: string | any;
     protected columns: string[]
-    public values: Array<KeyVal> = []
-    protected search_by:KeyVal = new KeyVal();
-    // 
-
-
-
-
-    constructor(table_name: string) {
-        this.table_name = table_name
-    }
-
-    set_columns(columns: string[]) {
-        this.columns = columns
-    }
+    public values: Array<KeyVal> | any = []
+    // remove
+    remove_table_name(): Model { delete this.table_name; return this }
+    remove_values(): Model { delete this.values; return this }
+    //
+    constructor(table_name: string) { this.table_name = table_name }
+    set_columns(columns: string[]) { this.columns = columns }
 
     public add_values(keyval: KeyVal) {
         if (keyval.getValue() === null) return
         else this.values.push(keyval)
     }
-
-
-
 
     // ===== crud =====
 
@@ -44,10 +34,10 @@ export default class Model {
     }
 
 
-    async show(select:Array<String>=[]): Promise<Model | any> {
+    async show(select: Array<String> = []): Promise<Model | any> {
         var temp;
         await (await db).query<RowDataPacket[]>(
-            `SELECT ${select.length==0? "*":select} FROM ${this.table_name}
+            `SELECT ${select.length == 0 ? "*" : select} FROM ${this.table_name}
             WHERE ${this.values[0].getKey()} = ${this.values[0].getValue()};`
         ).then(([d, q]) => {
             temp = d[0];
@@ -60,7 +50,7 @@ export default class Model {
 
 
 
-    async update(): Promise<Model|any> {
+    async update(): Promise<Model | any> {
         const data = this.format_update(this.values)
         await (await db).query<RowDataPacket[]>(`
             UPDATE ${this.table_name} SET ${data} WHERE 
@@ -76,7 +66,7 @@ export default class Model {
     private created_at: string
     private updated_at: string
 
-   
+
 
     public set_created_at(dt: string = ""): Model {
         const date = moment().format().replace("T", " ").split("+")[0]
@@ -112,12 +102,7 @@ export default class Model {
 
     // ===== util =====
 
-    by(keyval:KeyVal):Model{
-        this.search_by = keyval
-        return this
-    }
-    
-    format_insert(values:KeyVal[]):Array<Array<String>>{
+    format_insert(values: KeyVal[]): Array<Array<String>> {
         const temp_column = []
         const temp_value = []
         for (var i = 0; i < values.length; i++) {
@@ -128,12 +113,12 @@ export default class Model {
 
     }
 
-    format_update(values:KeyVal[]):string{
+    format_update(values: KeyVal[]): string {
         var temp = ""
         for (var i = 0; i < values.length; i++) {
-            var a =`${values[i].getKey()} = ${values[i].getValue()}, `
-            if(i == values.length-1) a = a.replace(",","")
-            temp+=a
+            var a = `${values[i].getKey()} = ${values[i].getValue()}, `
+            if (i == values.length - 1) a = a.replace(",", "")
+            temp += a
         }
         return temp
 

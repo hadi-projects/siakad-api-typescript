@@ -5,82 +5,87 @@ import SuccessReponse from "../../util/response/success_response"
 import CryptoUtil from "../../util/crypto.util"
 import JwtService from "../../service/jwt.service"
 import KeyVal from "../../model/keyval.model"
+import { randomBytes } from "crypto"
+import StatusModel from "../../model/status.model"
+import Model from "../../model/meta/model"
 
 export default class OtpController {
 
     async generate2fa(req: Request, res: Response) {
         if (!new UserModel().validate_empty([req.body['verify_token']]))
-            return FailedResponse.loginFailed(res)
+            return FailedResponse.validationFailed(res)
 
-        const user: UserModel = new UserModel()
-        user.by(new KeyVal().setKey('verify_token').setValue(req.body['verify_token'])) as UserModel
-        user.show(['id', 'secret_key', 'status_id', 'email'])
-        // console.log(user);
+        const user = await new UserModel().set_verify_token(req.body['verify_token'])
+            .show(['id', 'secret_key', 'status_id', 'email'])
+        console.log(user);
 
-        if (user.get_id() == null) return FailedResponse.verifyTokenExpired(res)
-        // if (user.get_status().get_name() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
+        if (user == null) return FailedResponse.verifyTokenExpired(res)
 
         // when secret not exist
         // create new one
-        
-        if (user.get_secret_key() == null && user.get_otpauth_url() == null) {
-            const raw = CryptoUtil.generateOtp(user.get_email())
+        if (user.secret_key == null && user.otpauth_url == null || user.secret_key == "" && user.otpauth_url == "") {
+            const raw = CryptoUtil.generateOtp(user.email)
             const encrypted_secret = CryptoUtil.encryptSecret(raw.secret)
             const encrypted_uri = CryptoUtil.hashedOtpauthUrl(raw.uri)
 
-            user.set_secret_key(encrypted_secret)
+            await new UserModel().set_id(user.id).set_secret_key(encrypted_secret)
                 .set_otpauth_url(encrypted_uri)
-                // .set_status(new StatusModel().set_id("2"))
+                .set_status(new StatusModel().set_id('2'))
+                .set_verify_token(randomBytes(24).toString('hex'))
+                .update()
 
-        //     const result = await user_repo.edit(user)
-        //     if (result == false) return FailedResponse.queryFailed(res, '')
+            const data = await new UserModel().set_id(user.id).set_verify_token(req.body['verify_token'])
+                .show(['id', 'secret_key', 'otpauth_url', 'verify_token'])
 
-        //     response.set_secret_key(raw.secret)
-        //         .set_otpauth_url(raw.uri)
-        //         .set_verify_token(randomBytes(24).toString('hex'))
+            return SuccessReponse.generate2fa(res, data)
+        }
 
-        //     return SuccessReponse.generate2fa(res, response)
-        // }
-        // //  else return existed otp
-        // response.set_secret_key(CryptoUtil.decryptSecret(user.get_secret_key()))
-        //     .set_otpauth_url(CryptoUtil.decryptOtpauthUrl(user.get_otpauth_url()))
-        //     .set_verify_token(user.get_verify_token())
+        await new UserModel().set_id(user.id)
+            .set_verify_token(randomBytes(24).toString('hex'))
+            .update()
 
-        // return SuccessReponse.generate2fa(res, response)
-    }}
+        var data = await new UserModel().set_id(user.id).set_verify_token(req.body['verify_token'])
+            .show(['id', 'secret_key', 'otpauth_url', 'verify_token'])
+
+
+        data = new UserModel().set_id(user.id)
+            .set_secret_key(CryptoUtil.decryptSecret(user.secret_key))
+            .set_otpauth_url(CryptoUtil.decryptOtpauthUrl(data.otpauth_url))
+            .set_verify_token(data.verify_token)
+            .remove_table_name()
+            .remove_values()
+
+        data.remove_table_name
+        data.remove_values
+
+        return SuccessReponse.generate2fa(res, data)
+    }
 
 
 
     async verify(req: Request, res: Response) {
-        // const user_repo = new UserRepository()
-        let user = new UserModel()
-        const response = new UserModel()
 
-        user.set_verify_token(req.body['verify_token'])
-            .set_otp(req.body['otp_code'])
+        // TODO
+        // set maximal hit 5x
 
-        if (!user.validateVerifyOtp(user)) return FailedResponse.paramRequestFailed(res, "")
+        if (new UserModel().validate_empty([req.body['verify_token'], req.body['otp_code']]) == false)
+            return FailedResponse.validationFailed(res)
 
-        // user = await user_repo.show(KeyVal.setKeyVal('verify_token', user.get_verify_token()))
-        if (user.get_id() == null) return FailedResponse.queryFailed(res, '')
-
-        console.log(user);
+        const user = await new UserModel().set_verify_token(req.body['verify_token'])
+            .show(['id', 'secret_key', 'status_id', 'email'])
 
         // verify otp
-        let result = CryptoUtil.verifyOtp(user.get_secret_key(), req.body['otp_code'])
-        if (result == false) return FailedResponse.otpFailed(res)
+        if (!CryptoUtil.verifyOtp(user.secret_key, req.body['otp_code']))
+            return FailedResponse.otpFailed(res)
 
         // update status 
-        user.set_verify_token('')
-        // user.set_status(new StatusModel().set_id("3"))
-        user.set_otp_verified_at()
+        new UserModel().set_id(user.id)
+            .set_verify_token('')
+            .set_status(new StatusModel().set_id("3"))
+            .set_otp_verified_at()
+            .update()
 
-        // result = await user_repo.edit(user)
-        // if (result == false) return FailedResponse.queryFailed(res, '')
-
-        response.set_jwt_token(JwtService.generate_jwt(user.get_id()))
-
-        return SuccessReponse.verifyOtpSuccess(res, response)
+        return SuccessReponse.verifyOtpSuccess(res, JwtService.generate_jwt(user.id))
     }
     reset() { }
 

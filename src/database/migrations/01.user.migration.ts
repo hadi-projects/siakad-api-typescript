@@ -10,7 +10,7 @@ export default class UserTable {
             new KeyVal().setKey('email').setValue([Type.varchar(100), Type.not_null, ", "]),
             new KeyVal().setKey('password').setValue([Type.varchar(100), Type.not_null, ", "]),
             new KeyVal().setKey('secret_key').setValue([Type.varchar(100), ", "]),
-            new KeyVal().setKey('otpauth_url').setValue([Type.varchar(100), ", "]),
+            new KeyVal().setKey('otpauth_url').setValue([Type.varchar(), ", "]),
             new KeyVal().setKey('role_id').setValue([Type.int, Type.not_null, ", "]),
             new KeyVal().setKey('status_id').setValue([Type.int, Type.not_null, ", "]),
             new KeyVal().setKey('verify_token').setValue([Type.varchar(100), ", "]),

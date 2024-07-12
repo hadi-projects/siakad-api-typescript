@@ -22,12 +22,12 @@ class SuccessReponse {
         })
     }
     
-    static verifyOtpSuccess(res: Response, user:UserModel) {
+    static verifyOtpSuccess(res: Response, jwt:JwtModel) {
         return res.json({
             code: 2000,
             status: "success",
             message: "verify otp success",
-            data: user
+            jwt: jwt
         })
     }
     

@@ -4,11 +4,21 @@ import d from 'mysql2'
 import KeyVal from "./keyval.model"
 
 export default class StatusModel extends Model {
-    
+    private id: string
     private name: string
     private status_key: string
     private status_id: string
     constructor() { super('statuses') }
+
+    public set_id(id: string): StatusModel {
+        this.id = id
+        this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))
+        return this
+    }
+
+    public get_id(): string {
+        return this.id;
+    }
 
     public set_name(name: string): StatusModel {
         this.name = name

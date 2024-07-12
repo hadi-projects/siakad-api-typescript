@@ -26,7 +26,7 @@ class UserModel extends Model {
 
     constructor() { super('users') }
 
-     public set_id(id: string): Model {
+     public set_id(id: string): UserModel {
         this.id = id
         this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))
         return this
@@ -69,24 +69,24 @@ class UserModel extends Model {
     }
 
 
-    // set_role(role: RoleModel): UserModel {
-    //     this.role = role
-    //     this.add_values(new KeyVal().setKey('role_id').setValue(d.escape(role.get_id())))
-    //     return this
-    // }
-    // get_role(): RoleModel {
-    //     return this.role
-    // }
+    set_role(role: RoleModel): UserModel {
+        this.role = role
+        this.add_values(new KeyVal().setKey('role_id').setValue(d.escape(role.get_id())))
+        return this
+    }
+    get_role(): RoleModel {
+        return this.role
+    }
     
     
-    // set_status(status: StatusModel): UserModel {
-    //     this.status = status
-    //     this.add_values(new KeyVal().setKey('status_id').setValue(d.escape(status.get_id())))
-    //     return this
-    // }
-    // get_status(): StatusModel {
-    //     return this.status
-    // }
+    set_status(status: StatusModel): UserModel {
+        this.status = status
+        this.add_values(new KeyVal().setKey('status_id').setValue(d.escape(status.get_id())))
+        return this
+    }
+    get_status(): StatusModel {
+        return this.status
+    }
     
     
     set_secret_key(secret_key: string): UserModel {
