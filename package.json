@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  
   "scripts": {
     "db:migrate": "ts-node src/database/migrations/migrate.ts",
     "db:seed": "ts-node src/database/seeder/seeder.ts",

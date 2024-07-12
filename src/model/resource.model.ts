@@ -15,7 +15,6 @@ export default class ResourceModel extends Model{
     private id: string
     private name: string 
     
-    // values
     v: string[] = []
 
     public get_id(): string {
@@ -34,7 +33,6 @@ export default class ResourceModel extends Model{
     public set_name(name: string):ResourceModel {
         this.name = name;
         this.v.push(d.escape(name))
-        this.values = this.v
         return this
     }
     
@@ -48,13 +46,11 @@ export default class ResourceModel extends Model{
     public set_created_at(): ResourceModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push(d.escape((date)))
-        this.values = this.v
         return this
     }
     public set_updated_at(): ResourceModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push((d.escape(date)))
-        this.values = this.v
         return this
     }
 

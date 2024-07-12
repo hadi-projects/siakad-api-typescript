@@ -1,5 +1,5 @@
 import express from 'express'
-import LogModel from "../model/log.model"
+import LogModel from "../model/access_log.model"
 import Logger from "../service/logger"
 import moment from 'moment'
 import UserModel from '../model/user.model'
@@ -14,31 +14,22 @@ import KeyVal from '../model/keyval.model'
 import RedisService from '../service/redis.service'
 import { createClient } from 'redis'
 import StatusModel from '../model/status.model'
+import AccessLogModel from '../model/access_log.model'
 
 export default class AccessLogMiddleware {
 
 	static async log(req: express.Request, res: express.Response) {
-		const logger = new Logger()
-		const log_model = new LogModel()
-		const log_repository = new LoglRepository()
 
-		log_model.setIp('http://127.0.0.1')
-		log_model.setMethod(req.method)
-		log_model.setUrl(req.originalUrl)
-		log_model.setEndpoint(req.url)
-		log_model.setHeader(req.headers)
-		log_model.setRequest_body(JSON.stringify(req.body))
-		log_model.setTimestamp(moment().format())
-
-		log_model.setUser(await this.user(req))
-		log_model.setAccess(this.access(req))
-
-
-		// save to json filw
-		logger.accesslLog().info(log_model)
-
-		// save to database
-		log_repository.store(log_model)
+		new AccessLogModel().set_url(req.originalUrl)
+			.set_endpoint(req.originalUrl)
+			.set_ip('http://127.0.0.1')
+			.set_method(req.method)
+			.set_access(new AccessModel())
+			.set_user(new UserModel())
+			.set_header(req.headers)
+			.set_request_body(req.body)
+			.set_timestamp()
+			.create()
 
 	}
 
@@ -56,8 +47,8 @@ export default class AccessLogMiddleware {
 			.connect();
 
 		if (!authorization) {
-			role_model.setName('auth')
-			user_model.setRole(role_model)
+			role_model.set_name('auth')
+			user_model.set_role(role_model)
 
 			return user_model
 		}
@@ -67,15 +58,15 @@ export default class AccessLogMiddleware {
 		key_val.setValue(user_id);
 
 		const user = await user_repo.show(key_val)
-		if (user.getEmail() == null) return user_model
+		if (user.get_email() == null) return user_model
 
-		user.setOtpauthUrl("")
-		user.setSecretKey("")
-		user.setCreatedAt("")
-		user.setPassword("")
-		user.setStatus(StatusModel.blankStatus())
-		user.setUpdatedAt("")
-		user.setVerifyToken("")
+		// user.set_otpauth_url("")
+		// user.setSecretKey("")
+		// user.setCreatedAt("")
+		// user.setPassword("")
+		// user.setStatus(StatusModel.blankStatus())
+		// user.setUpdatedAt("")
+		// user.setVerifyToken("")
 
 		redis.r.set('user', JSON.stringify(user))
 		return user

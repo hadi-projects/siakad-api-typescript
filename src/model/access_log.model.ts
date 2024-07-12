@@ -5,7 +5,7 @@ import Model from "./model"
 import UserModel from "./user.model"
 import d from 'mysql2'
 
-export default class LogModel extends Model {
+export default class AccessLogModel extends Model {
 
     constructor() {
         super()
@@ -23,14 +23,13 @@ export default class LogModel extends Model {
     private access!:AccessModel
     private user!:UserModel
 
-    // values
     v: string[] = []
 
     public get_request_body(): string {
         return this.request_body;
     }
 
-    public set_request_body(request_body: string): LogModel {
+    public set_request_body(request_body: string): AccessLogModel {
         this.request_body = request_body;
         return this
     }
@@ -39,10 +38,9 @@ export default class LogModel extends Model {
         return this.access;
     }
 
-    public setAccess(access: AccessModel): LogModel {
+    public set_access(access: AccessModel): AccessLogModel {
         this.access = access;
         this.v.push(d.escape(access.getResource()))
-        this.values = this.v
         return this
     }
 
@@ -50,10 +48,9 @@ export default class LogModel extends Model {
         return this.user;
     }
 
-    public set_user(user: UserModel): LogModel {
+    public set_user(user: UserModel): AccessLogModel {
         this.user = user;
-        this.v.push(d.escape(user.getName()))
-        this.values = this.v
+        this.v.push(d.escape(user.get_name()))
         return this
     }
 
@@ -62,10 +59,9 @@ export default class LogModel extends Model {
         return this.url;
     }
 
-    public set_url(url: string): LogModel {
+    public set_url(url: string): AccessLogModel {
         this.url = url;
         this.v.push(d.escape(url))
-        this.values = this.v
         return this
     }
 
@@ -73,10 +69,9 @@ export default class LogModel extends Model {
         return this.ip;
     }
 
-    public set_ip(ip: string): LogModel {
+    public set_ip(ip: string): AccessLogModel {
         this.ip = ip;
         this.v.push(d.escape(ip))
-        this.values = this.v
         return this
     }
 
@@ -84,10 +79,9 @@ export default class LogModel extends Model {
         return this.method;
     }
 
-    public set_method(method: string): LogModel {
+    public set_method(method: string): AccessLogModel {
         this.endpoint = method;
         this.v.push(d.escape(method))
-        this.values = this.v
         return this
     }
 
@@ -95,10 +89,9 @@ export default class LogModel extends Model {
         return this.endpoint;
     }
 
-    public set_endpoint(endpoint: string): LogModel {
+    public set_endpoint(endpoint: string): AccessLogModel {
         this.endpoint = endpoint;
         this.v.push(d.escape(endpoint))
-        this.values = this.v
         return this
     }
 
@@ -106,10 +99,8 @@ export default class LogModel extends Model {
         return this.timestamp;
     }
 
-    public set_timestamp(timestamp: string): LogModel {
-        this.timestamp = timestamp;
+    public set_timestamp(): AccessLogModel {
         const date = moment().format().replace("T", " ").split("+")[0]
-        this.values.push(d.escape(date))
         return this
     }
 
@@ -117,10 +108,9 @@ export default class LogModel extends Model {
         return this.header;
     }
 
-    public set_header(header: Object): LogModel {
+    public set_header(header: Object): AccessLogModel {
         this.header = header;
         this.v.push(d.escape(header))
-        this.values = this.v
         return this
     }
 }

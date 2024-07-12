@@ -13,7 +13,7 @@ export default class Middleware {
         // access log
         if (ApiKeyMiddleware.check(req, res) == false) return FailedResponse.tokenFailed(res)
         if (await PermissionMiddleware.check(req) == false) return FailedResponse.failedPermission(res, '')
-        if (JWTMiddleware.check(req, res, next) != '') return FailedResponse.jwtFailed(res, '')
+        if (JWTMiddleware.check(req) != '') return FailedResponse.jwtFailed(res, '')
 
         AccessLogMiddleware.log(req, res)
 

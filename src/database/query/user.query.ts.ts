@@ -33,8 +33,8 @@ export default class UserQuery {
         INSERT INTO users (
         name, email, password, role_id, status_id, verify_token, created_at
         ) VALUES (
-        ${d.escape(user.getName())}, ${d.escape(user.getEmail())}, 
-        ${d.escape(user.getPassword())}, ${d.escape(user.getRole().get_id())},
+        ${d.escape(user.get_name())}, ${d.escape(user.get_email())}, 
+        ${d.escape(user.get_password())}, ${d.escape(user.get_role().get_id())},
         1, '', '${this.datetime}');
         `;
     }
@@ -64,16 +64,16 @@ export default class UserQuery {
     static edit(user: UserModel) {
         return `
         UPDATE users SET 
-        users.name = CASE WHEN ${d.escape(user.getName())} IS NULL THEN users.name ELSE ${d.escape(user.getName())} END,
-        users.email = CASE WHEN ${d.escape(user.getEmail())} IS NULL THEN users.email ELSE ${d.escape(user.getEmail())} END,
-        users.password = CASE WHEN ${d.escape(user.getPassword())} IS NULL THEN users.password ELSE ${d.escape(user.getPassword())} END,
-        users.role_id = CASE WHEN ${user.getRole() == undefined ? null : d.escape(user.getRole().get_id())} IS NULL THEN users.role_id ELSE ${user.getRole() == undefined ? null : d.escape(user.getRole().get_id())} END,
-        users.status_id = CASE WHEN ${user.getStatus() == undefined ? null : d.escape(user.getStatus().get_id())} IS NULL THEN users.status_id ELSE ${user.getRole() == undefined ? null : d.escape(user.getStatus().get_id())} END,
-        users.secret_key = CASE WHEN ${d.escape(user.getSecretKey())} IS NULL THEN users.secret_key ELSE ${d.escape(user.getSecretKey())} END,
-        users.otpauth_url = CASE WHEN ${d.escape(user.getOtpauthUrl())} IS NULL THEN users.otpauth_url ELSE ${d.escape(user.getOtpauthUrl())} END,
-        users.verify_token = CASE WHEN ${d.escape(user.getVerifyToken())} IS NULL THEN users.verify_token ELSE ${d.escape(user.getVerifyToken())} END,
+        users.name = CASE WHEN ${d.escape(user.get_name())} IS NULL THEN users.name ELSE ${d.escape(user.get_name())} END,
+        users.email = CASE WHEN ${d.escape(user.get_email())} IS NULL THEN users.email ELSE ${d.escape(user.get_email())} END,
+        users.password = CASE WHEN ${d.escape(user.get_password())} IS NULL THEN users.password ELSE ${d.escape(user.get_password())} END,
+        users.role_id = CASE WHEN ${user.get_role() == undefined ? null : d.escape(user.get_role().get_id())} IS NULL THEN users.role_id ELSE ${user.get_role() == undefined ? null : d.escape(user.get_role().get_id())} END,
+        users.status_id = CASE WHEN ${user.get_status() == undefined ? null : d.escape(user.get_status().get_id())} IS NULL THEN users.status_id ELSE ${user.get_role() == undefined ? null : d.escape(user.get_status().get_id())} END,
+        users.secret_key = CASE WHEN ${d.escape(user.get_secret_key())} IS NULL THEN users.secret_key ELSE ${d.escape(user.get_secret_key())} END,
+        users.otpauth_url = CASE WHEN ${d.escape(user.get_otpauth_url())} IS NULL THEN users.otpauth_url ELSE ${d.escape(user.get_otpauth_url())} END,
+        users.verify_token = CASE WHEN ${d.escape(user.get_verify_token())} IS NULL THEN users.verify_token ELSE ${d.escape(user.get_verify_token())} END,
         users.updated_at = '${this.datetime}'
-        WHERE users.id = ${d.escape(user.getId())};`
+        WHERE users.id = ${d.escape(user.get_id())};`
     }
    
     static delete(keyval: Keyval) {

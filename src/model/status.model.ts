@@ -16,7 +16,6 @@ export default class StatusModel extends Model {
     private status_key: string 
     private status_id: string 
 
-    // values
     v: string[] = []
 
     public get_id(): string {
@@ -35,7 +34,6 @@ export default class StatusModel extends Model {
     public set_name(name: string): StatusModel {
         this.name = name;
         this.v.push(d.escape(name))
-        this.values = this.v
         return this
     }
 
@@ -46,7 +44,6 @@ export default class StatusModel extends Model {
     public set_status_key(status_key: string): StatusModel {
         this.status_key = status_key;
         this.v.push(d.escape(status_key))
-        this.values = this.v
         return this
     }
 
@@ -57,20 +54,17 @@ export default class StatusModel extends Model {
     public set_status_id(status_id: string): StatusModel {
         this.status_id = status_id;
         this.v.push(d.escape(status_id))
-        this.values = this.v
         return this
     }
 
     public set_created_at(): StatusModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push(d.escape((date)))
-        this.values = this.v
         return this
     }
     public set_updated_at(): StatusModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.v.push((d.escape(date)))
-        this.values = this.v
         return this
     }
 

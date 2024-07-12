@@ -27,17 +27,18 @@ export default class UserRepository {
             const result = JSON.parse(JSON.stringify(data))
             if (result == undefined) return null
             for (var i = 0; i < result.length; i++) {
-                    const user = new UserModel()
-
-                    user.setId(result[i].id)
-                    user.setName(result[i].name)
-                    user.setEmail(result[i].email)
-                    user.setPassword(result[i].password)
-                    user.setRole(RoleModel.setRoleModel(result[i].role_id, result[i].role_name))
-                    user.setStatus(StatusModel.setStatusModel(result[i].status_id, result[i].status_name))
-                    user.setCreatedAt(result[i].created_at)
-                    user.setUpdatedAt(result.updated_at)
-                    users.push(user)
+                    users.push(
+                        new UserModel().set_id(result.id)
+                        .set_name(result.name)
+                        .set_email(result.email)
+                        .set_password(result.password)
+                        .set_secret_key(result.secret_key)
+                        .set_otpauth_url(result.otpauth_url)
+                        .set_role(new RoleModel().set_id(result.role_id).set_name(result.role_name))
+                        .set_status(new StatusModel().set_id(result.status_id).set_name(result.status_id))
+                        .set_created_at(result.created_at)
+                        .set_updated_at(result.updated_at)
+                    )
                 }
             })
             .catch((err: any) => this.error_logger.error({ message: err, system: "mysql" }))
@@ -79,28 +80,29 @@ export default class UserRepository {
     }
 
 
-    async show(keyval: Keyval) {
+    async show(keyval: Keyval):Promise<UserModel> {
         const user = new UserModel()
 
         await (await db).query<RowDataPacket[]>(UserQuery.show(keyval))
             .then(([data, field]) => {
                 const result = JSON.parse(JSON.stringify(data))[0]
                 if (result == undefined) return null
-                    user.setId(result.id)
-                    user.setName(result.name)
-                    user.setEmail(result.email)
-                    user.setPassword(result.password)
-                    user.setSecretKey(result.secret_key)
-                    user.setOtpauthUrl(result.otpauth_url)
-                    user.setRole(RoleModel.setRoleModel(result.role_id, result.role_name))
-                    user.setStatus(StatusModel.setStatusModel(result.status_id, result.status_name))
-                    user.setCreatedAt(result.created_at)
-                    user.setUpdatedAt(result.updated_at)
+                return user.set_id(result.id)
+                    .set_name(result.name)
+                    .set_email(result.email)
+                    .set_password(result.password)
+                    .set_secret_key(result.secret_key)
+                    .set_otpauth_url(result.otpauth_url)
+                    .set_role(new RoleModel().set_id(result.role_id).set_name(result.role_name))
+                    .set_status(new StatusModel().set_id(result.status_id).set_name(result.status_id))
+                    .set_created_at(result.created_at)
+                    .set_updated_at(result.updated_at)
             })
             .catch((err: any) => {
                 this.error_logger.error({ message: err, system: "mysql" })
+                return new Error(err)
             })
-        return user
+            return user
     }
 
     async delete(keyval: Keyval) {

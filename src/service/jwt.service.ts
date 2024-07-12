@@ -27,4 +27,9 @@ export default class JwtService {
         const data = jwt.decode(jwt_token)
         return data == undefined ? "0" : JSON.stringify(data)
     }
+    
+    static extract_data(jwt_token: string): string|Object{
+        const data = jwt.decode(jwt_token)
+        return data == undefined ? {} : data
+    }
 }

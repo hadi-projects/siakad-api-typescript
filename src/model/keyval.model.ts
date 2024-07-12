@@ -1,37 +1,28 @@
 export default class KeyVal {
-        private key!:string
-        private value!:string 
+        private key!:string|any
+        private value!:string|any
     
         public getKey(): string {
             return this.key;
         }
     
-        public setKey(key: string): void {
+        public setKey(key: string|any): KeyVal {
             this.key = key;
+            return this
         }
-    
-        public getValue(): string {
+        
+        public getValue(): string|any {
+            // console.log('===');
+            // console.log(this.value);
+            // console.log(typeof this.value);
+            // console.log();
+            // console.log('===');
+            if(this.value === "NULL") return null 
             return this.value;
         }
-    
-        public setValue(value: string): void {
+        
+        public setValue(value: string|any): KeyVal|any {
             this.value = value;
-        }
-    
-        validate(keyval:KeyVal):boolean{
-            if(
-                keyval.getKey() == null || keyval.getKey() == undefined || keyval.getKey() == "" ||
-                keyval.getValue() == null || keyval.getValue() == undefined || keyval.getValue() == ""
-            ){
-                return false
-            }
-            return true
-        }
-
-        public static setKeyVal(key:string, val:any){
-            const keyval = new KeyVal()
-            keyval.setKey(key)
-            keyval.setValue(val)
-            return keyval
+            return this
         }
 }

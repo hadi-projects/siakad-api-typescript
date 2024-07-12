@@ -14,8 +14,6 @@ export default class RoleHasPermissionModel extends Model {
         super.set_columns(RoleHasPermissionTable.columns)
     }
 
-    // values
-    v: string[] = []
 
     
     public get_role_id(): string {
@@ -24,8 +22,6 @@ export default class RoleHasPermissionModel extends Model {
 
     public set_role_id(role_id: string): RoleHasPermissionModel {
         this.role_id = role_id;
-        this.v.push(d.escape(role_id))
-        this.values = this.v
         return this
     }
 
@@ -35,8 +31,6 @@ export default class RoleHasPermissionModel extends Model {
 
     public set_resource_id(resource_id: string): RoleHasPermissionModel {
         this.resource_id = resource_id;
-        this.v.push(d.escape(resource_id))
-        this.values = this.v
         return this
     }
 
@@ -46,20 +40,14 @@ export default class RoleHasPermissionModel extends Model {
 
     public set_permission_id(permission_id: string): RoleHasPermissionModel {
         this.permission_id = permission_id;
-        this.v.push(d.escape(permission_id))
-        this.values = this.v
         return this
     }
     public set_created_at(): RoleHasPermissionModel {
         const date = moment().format().replace("T", " ").split("+")[0]
-        this.v.push(d.escape((date)))
-        this.values = this.v
         return this
     }
     public set_updated_at(): RoleHasPermissionModel {
         const date = moment().format().replace("T", " ").split("+")[0]
-        this.v.push((d.escape(date)))
-        this.values = this.v
         return this
     }
 }

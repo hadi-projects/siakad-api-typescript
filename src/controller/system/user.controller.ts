@@ -24,10 +24,10 @@ export default class UserController {
         const request = new UserModel()
         const user_repo =  new UserRepository()
 
-        request.setName(req.body['name'])
-        request.setEmail(req.body['email'])
-        request.setPassword(req.body['password'])
-        request.setRole(RoleModel.setRoleModel(req.body['role_id'], ''))
+        request.set_name(req.body['name'])
+        request.set_email(req.body['email'])
+        request.set_password(req.body['password'])
+        request.set_role(RoleModel.setRoleModel(req.body['role_id'], ''))
 
         if(request.validateCreate(request)==false) return FailedResponse.validationFailed(res)
 
@@ -41,11 +41,11 @@ export default class UserController {
         const request = new UserModel()
         const user_repo =  new UserRepository()
 
-        request.setId(req.body['id'])
+        request.set_id(req.body['id'])
         if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
         
-        const user = await user_repo.show(KeyVal.setKeyVal('id', request.getId()))
-        if (user.getName() == null) return FailedResponse.queryFailed(res, '', 'result.message')
+        const user = await user_repo.show(new KeyVal().setKey('id').setValue(request.get_id()))
+        if (user.get_name() == null) return FailedResponse.queryFailed(res, '', 'result.message')
 
         return SuccessReponse.getDataSuccess(res, user,  JwtService.generate_jwt(''))
     }
@@ -55,12 +55,12 @@ export default class UserController {
         const request = new UserModel()
         const user_repo =  new UserRepository()
         
-        request.setId(req.body['id'])
-        request.setName(req.body['name'])
-        request.setEmail(req.body['email'])
-        request.setPassword(req.body['password'])
-        request.setStatus(new StatusModel().set_id(req.body['status_id']))
-        request.setRole(RoleModel.setRoleModel(req.body['role_id'], ''))
+        request.set_id(req.body['id'])
+        .set_name(req.body['name'])
+        .set_email(req.body['email'])
+        .set_password(req.body['password'])
+        .set_status(new StatusModel().set_id(req.body['status_id']))
+        .set_role(RoleModel.setRoleModel(req.body['role_id'], ''))
 
         if(request.validateEdit(request)==false) return FailedResponse.validationFailed(res)
 
@@ -75,11 +75,11 @@ export default class UserController {
         const request = new UserModel()
         const user_repo =  new UserRepository()
 
-        request.setId(req.body['id'])
+        request.set_id(req.body['id'])
 
         if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
 
-        const result = await user_repo.delete(KeyVal.setKeyVal('id', request.getId()))
+        const result = await user_repo.delete(new KeyVal().setKey('id').setValue(request.get_id()))
         if (result != true) return FailedResponse.queryFailed(res, '', 'result.message')
 
         return SuccessReponse.deleteDataSuccess(res, JwtService.generate_jwt(''))

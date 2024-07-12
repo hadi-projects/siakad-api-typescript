@@ -34,166 +34,154 @@ class UserModel extends Model {
     // values
     v: string[] = []
 
-    setId(id: string): UserModel {
+    set_id(id: string): UserModel {
         this.id = id
         return this
     }
 
-    setName(name: string): UserModel {
+    set_name(name: string): UserModel {
         this.name = name;
         this.v.push(d.escape(name))
-        this.values = this.v
         return this
     }
 
-    setEmail(email: any): UserModel {
+    set_email(email: any): UserModel {
         this.email = email;
         this.v.push(d.escape(email))
-        this.values = this.v
         return this
     }
 
-    setPassword(password: string): UserModel {
+    set_password(password: string): UserModel {
         this.password = password;
         this.v.push(d.escape(password))
-        this.values = this.v
         return this
     }
 
-    setRole(role: RoleModel): UserModel {
+    set_role(role: RoleModel): UserModel {
         this.role = role;
         this.v.push(d.escape(role.get_id()))
-        this.values = this.v
         return this
     }
     
-    setStatus(status: StatusModel): UserModel {
+    set_status(status: StatusModel): UserModel {
         this.status = status
         this.v.push(d.escape(status.get_id()))
-        this.values = this.v
         return this
     }
 
-    setSecretKey(secret_key: string): UserModel {
+    set_secret_key(secret_key: string): UserModel {
         this.secret_key = secret_key;
         this.v.push(d.escape(secret_key))
-        this.values = this.v
         return this
     }
-    setOtpauthUrl(otpauth_url: string): UserModel {
+    set_otpauth_url(otpauth_url: string): UserModel {
         this.otpauth_url = otpauth_url;
         this.v.push(d.escape(otpauth_url))
-        this.values = this.v
         return this
     }
 
-    setVerifyToken(verify_token: string): UserModel {
+    set_verify_token(verify_token: string): UserModel {
         this.verify_token = verify_token;
         this.v.push(d.escape(verify_token))
-        this.values = this.v
         return this
     }
-    setOtp(otp: string): UserModel {
+    set_otp(otp: string): UserModel {
         this.otp = otp
         return this
     }
 
-    setJwtToken(jwt_token: object) {
+    set_jwt_token(jwt_token: object) {
         this.jwt_token = jwt_token
         return this
     }
 
-    setAction(action: Action): UserModel {
+    set_action(action: Action): UserModel {
         this.action = action
         return this
     }
 
-    setOtpVerifiedAt(): UserModel {
+    set_otp_verified_at(): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.otp_verified_at = date;
         this.v.push(d.escape(date))
-        this.values = this.v
         return this
     }
-    setEmailVerifiedAt(): UserModel {
+    set_email_verified_at(): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.email_verified_at = date;
         this.v.push(d.escape(date))
-        this.values = this.v
         return this
     }
 
-    public set_created_at(): UserModel {
+    public set_created_at(dt:string=''): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
-        this.created_at = date
+        this.created_at = dt==''?date:dt
         this.v.push(d.escape((date)))
-        this.values = this.v
         return this
     }
-    public set_updated_at(): UserModel {
+    public set_updated_at(dt:string=''): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
-        this.updated_at = date
+        this.updated_at = dt==''?date:dt
         this.v.push((d.escape(date)))
-        this.values = this.v
         return this
     }
 
-    getId(): string {
+    get_id(): string {
         return this.id
     }
 
-    getName(): string {
+    get_name(): string {
         return this.name
     }
-    getEmail(): string {
+    get_email(): string {
         return this.email
     }
-    getPassword(): string {
+    get_password(): string {
         return this.password
     }
-    getRole(): RoleModel {
+    get_role(): RoleModel {
         return this.role
     }
-    getStatus(): StatusModel {
+    get_status(): StatusModel {
         return this.status
     }
-    getSecretKey(): string {
+    get_secret_key(): string {
         return this.secret_key
     }
-    getOtpauthUrl(): string {
+    get_otpauth_url(): string {
         return this.otpauth_url
     }
-    getOtpVerifiedAt(): string {
+    get_otp_verified_at(): string {
         return this.otp_verified_at
     }
 
-    getJwtToken(): object {
+    get_jwt_token(): object {
         return this.jwt_token
     }
-    getVerifyToken(): string {
+    get_verify_token(): string {
         return this.verify_token
     }
-    getOtp(): string {
+    get_otp(): string {
         return this.otp
     }
 
-    getPayload() {
+    get_payload() {
         return this
     }
 
-    getAction() {
+    get_action() {
         return this.action
     }
 
-    getCreatedAt(): string {
+    get_createdAt(): string {
         return this.created_at
     }
-    getUpdatedAt(): string {
+    get_updatedAt(): string {
         return this.updated_at
     }
 
 
-    removeId(): UserModel {
+    remove_id(): UserModel {
         delete this.id
         return this
     }
@@ -243,8 +231,8 @@ class UserModel extends Model {
 
     validateLogin(user: UserModel): boolean {
         if (
-            user.getEmail() == null || user.getEmail() == "" ||
-            user.getPassword() == null || user.getPassword() == ""
+            user.get_email() == null || user.get_email() == "" ||
+            user.get_password() == null || user.get_password() == ""
 
         ) {
             return false
@@ -255,7 +243,7 @@ class UserModel extends Model {
 
     validateVToken(user: UserModel): boolean {
         if (
-            user.getVerifyToken() == null || user.getVerifyToken() == ""
+            user.get_verify_token() == null || user.get_verify_token() == ""
         ) {
             return false
         }
@@ -263,22 +251,22 @@ class UserModel extends Model {
     }
     validateVerifyOtp(user: UserModel): boolean {
         if (
-            user.getVerifyToken() == null || user.getVerifyToken() == "" ||
-            user.getOtp() == null || user.getOtp() == ""
+            user.get_verify_token() == null || user.get_verify_token() == "" ||
+            user.get_otp() == null || user.get_otp() == ""
         ) {
             return false
         }
         return true
     }
     validateFreeze(user: UserModel): boolean {
-        if (user.getId() == null || user.getStatus() == null) {
+        if (user.get_id() == null || user.get_status() == null) {
             return false
         }
         return true
     }
 
     validateCreate(user: UserModel): boolean {
-        if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole().get_id() == null) {
+        if (user.get_name() == null || user.get_email() == null || user.get_password() == null || user.get_role().get_id() == null) {
             return false
         }
         return true
@@ -286,23 +274,23 @@ class UserModel extends Model {
 
     validateEdit(user: UserModel): boolean {
         console.log(user)
-        if (user.getId() == null) {
+        if (user.get_id() == null) {
             console.log('failed id')
             return false
-        } else if ((user.getName() == null && user.getEmail() == null && user.getPassword() == null && user.getRole().get_id() == null)) {
+        } else if ((user.get_name() == null && user.get_email() == null && user.get_password() == null && user.get_role().get_id() == null)) {
             console.log('failed data')
             return false
         }
         return true
     }
     validateId(user: UserModel): boolean {
-        if (user.getId() == null) {
+        if (user.get_id() == null) {
             return false
         }
         return true
     }
     validateResetPassword(user: UserModel): boolean {
-        if (user.getId() == null || user.getPassword() == null) {
+        if (user.get_id() == null || user.get_password() == null) {
             return false
         }
         return true

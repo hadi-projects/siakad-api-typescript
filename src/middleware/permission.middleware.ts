@@ -12,9 +12,9 @@ export default class PermissionMiddleware {
         const permissionrepository_model = new PermissionRepositoryModel()
 
 
-        permissionrepository_model.setRole_name((await user).getRole().get_name())
-        permissionrepository_model.setResource_name(access.getResource())
-        permissionrepository_model.setPermission_name(access.getAction())
+        permissionrepository_model.set_role_id((await user).get_role().get_id())
+        permissionrepository_model.set_resource_id(access.getResource())
+        permissionrepository_model.set_permission_id(access.getAction())
 
         const result = await permission_repo.check(permissionrepository_model)
 

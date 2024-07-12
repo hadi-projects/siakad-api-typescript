@@ -7,53 +7,29 @@ import CryptoUtil from '../../util/crypto.util'
 import SuccessReponse from '../../util/response/success_response'
 import { randomBytes } from 'crypto'
 import FailedResponse from '../../util/response/failed_response'
+import StatusModel from '../../model/status.model'
 // import OtpModel from '../../model/otp.model'
 
 
 export default class AuthController {
     async login(req: Request, res: Response) {
-
-
-        //
-
-        console.log('---');
-        
-        
-        // const otp = new OtpModel()
-        // otp.create()
-        
-        console.log('---');
-        //
-        const user_repo = new UserRepository()
         let user = new UserModel()
 
-        user.setEmail(req.body["email"])
-            .setPassword(req.body["password"])
+        user.set_email(req.body["email"])
+            .set_password(req.body["password"])
 
         if (!user.validateLogin(user)) return FailedResponse.loginFailed(res)
 
-        user = (await user_repo.show(Keyval.setKeyVal('email', user.getEmail())))
-        if (user.getId() == null) return FailedResponse.loginFailed(res)
+        user = await user.show() as UserModel
 
-        if (!CryptoUtil.comparePassword(req.body["password"], user.getPassword())) return FailedResponse.loginFailed(res)
-        if (user.getStatus().get_name().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
+        if (!CryptoUtil.comparePassword(req.body["password"], user.get_password())) return FailedResponse.loginFailed(res)
+        if (user.get_status().get_name().toLocaleLowerCase() == "freezed") return FailedResponse.userFreezed(res, '')
 
+        new UserModel().set_verify_token(randomBytes(24).toString('hex'))
+            .set_status(user.get_status())
+            .update()
 
-
-        user.setVerifyToken(randomBytes(24).toString('hex'))
-            .setId(user.getId())
-            .setStatus(user.getStatus())
-            .removeName()
-            .removeSecretKey()
-            .removeOtpauthUrl()
-            .removePassword()
-            .removeCreatedAt()
-            .removeUpdatedAt()
-
-        const result = await user_repo.edit(user)
-        if (result == false) return FailedResponse.loginFailed(res)
-
-        return SuccessReponse.login(res, user)
+        return SuccessReponse.login(res, new UserModel().set_email(user.get_verify_token()))
     }
 
     logout(req: Request, res: Response) {
