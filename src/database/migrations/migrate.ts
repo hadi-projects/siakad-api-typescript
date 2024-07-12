@@ -7,12 +7,8 @@ import PermissionTable from "./06.permission.migration"
 import AccessLogTable from "./07.access_log.migration"
 import SystemLogTable from "./08.system_log.migration"
 import ForeignTable from "./foreignkey.migration"
-import Migrations from "./migrations"
-import KeyVal from "../../model/keyval.model"
-import { RowDataPacket } from "mysql2/promise"
-import MigrationsModel from "../../model/migration.model"
-import Logger from "../../service/logger"
-import Migration from "./main"
+import Migrations from "./00.migrations"
+import Migration from "../meta/main"
 
 
 async function main(){
@@ -31,13 +27,9 @@ async function main(){
     await new AccessLogTable().migrate()
     await new SystemLogTable().migrate()
     await ForeignTable.migrate()
+    
     process.exit(0)
 }
 
 main()
-
-
-
-
-// create file with new file typescript
 

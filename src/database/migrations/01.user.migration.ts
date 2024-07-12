@@ -1,7 +1,6 @@
-import Type from './datatype';
+import Type from '../meta/datatype';
 import KeyVal from '../../model/keyval.model';
-import Migration from './main';
-import Table from './tabel';
+import Table from '../meta/tabel';
 
 export default class UserTable {
     async migrate() {

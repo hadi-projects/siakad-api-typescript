@@ -1,10 +1,6 @@
-import { RowDataPacket } from 'mysql2/promise'
-import db from '../database'
-import Type from './datatype';
-import MigrationsModel from '../../model/migration.model';
+import Type from '../meta/datatype';
 import KeyVal from '../../model/keyval.model';
-import Migration from './main';
-import Table from './tabel';
+import Table from '../meta/tabel';
 
 export default class AccessLogTable {
     async migrate() {

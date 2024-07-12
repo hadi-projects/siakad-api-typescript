@@ -1,5 +1,5 @@
 import Model from "./model";
-import Migrations from '../database/migrations/migrations'
+import Migrations from '../database/migrations/00.migrations'
 import moment from "moment";
 import d from 'mysql2'
 import KeyVal from "./keyval.model";

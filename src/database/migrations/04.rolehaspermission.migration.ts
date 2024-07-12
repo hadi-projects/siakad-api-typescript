@@ -1,6 +1,6 @@
-import Type from './datatype';
+import Type from '../meta/datatype';
 import KeyVal from '../../model/keyval.model';
-import Table from './tabel';
+import Table from '../meta/tabel';
 
 export default class RoleHasPermissionTable {  
     async migrate() {
