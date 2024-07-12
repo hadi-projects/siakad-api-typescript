@@ -2,46 +2,30 @@ import { RowDataPacket } from 'mysql2/promise'
 import db from '../database'
 import Type from './datatype';
 import MigrationsModel from '../../model/migration.model';
+import KeyVal from '../../model/keyval.model';
+import Migration from './main';
 
 export default class AccessLogTable {
-    static m = new MigrationsModel()
-    static table_name:string = 'access_logs'
-    static columns:string[] = [
-        'id',
-        'url', 
-        'enpoint', 
-        'ip',
-        'method',
-        'access', 
-        'user',
-        'header',
-        'body',
-        'updated_at',
-    ]
-
-    static async migrate() {
-        await (await db).query(`DROP TABLE IF EXISTS ${this.table_name}`);
-        await (await db).query<RowDataPacket[]>(`
-        CREATE TABLE ${this.table_name} (
-             ${this.columns[0]} ${Type.int} ${Type.primary_key} ${Type.auto_increment},
-             ${this.columns[1]} ${Type.varchar()} ${Type.not_null},
-             ${this.columns[2]} ${Type.varchar()} ${Type.not_null},
-             ${this.columns[3]} ${Type.varchar()} ${Type.not_null},
-             ${this.columns[4]} ${Type.varchar()} ${Type.not_null},
-             ${this.columns[5]} ${Type.json} ${Type.not_null},
-             ${this.columns[6]} ${Type.json} ${Type.not_null},
-             ${this.columns[7]} ${Type.json} ${Type.not_null},
-             ${this.columns[8]} ${Type.json} ${Type.not_null},
-             ${this.columns[9]} ${Type.datetime}
-            );`)
-            .then(() => {
-                this.m.set_name(this.table_name)
-                    .set_created_at().create()
-                console.log(this.table_name + ' table migration success ✅')
-            }).catch((e) => {
-                    console.log(this.table_name + ' table migration failed ❌: ' + e)
-                    process.exit(0)
+    private table_name:string = 'access_logs'
     
-                })
-        }        
+    columns:KeyVal[] = [
+        new KeyVal().setKey('id').setValue([Type.int, Type.primary_key, Type.auto_increment, " , "]),
+        new KeyVal().setKey('url').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('enpoint').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('ip').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('method').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('access').setValue([Type.json, Type.not_null, ", "]),
+        new KeyVal().setKey('user').setValue([Type.json, Type.not_null, ", "]),
+        new KeyVal().setKey('header').setValue([Type.json, Type.not_null, ", "]),
+        new KeyVal().setKey('body').setValue([Type.json, Type.not_null, ", "]),
+        new KeyVal().setKey('created_at').setValue([Type.datetime])
+    ]
+    
+    get_table_name():string{
+        return this.table_name
+    }
+    
+    async migrate() {
+        await new Migration().create_table(this.table_name, this.columns)
+    }
 }

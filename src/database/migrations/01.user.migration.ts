@@ -1,54 +1,32 @@
-import { RowDataPacket } from 'mysql2/promise'
-import db from '../database'
 import Type from './datatype';
-import MigrationsModel from '../../model/migration.model';
+import KeyVal from '../../model/keyval.model';
+import Migration from './main';
 
 export default class UserTable {
-    static table_name: string = 'users'
-    static columns: string[] = [
-        'id',
-        'name',
-        'email',
-        'password',
-        'secret_key',
-        'otpauth_url',
-        'role_id',
-        'status_id',
-        'verify_token',
-        'otp_verified_at',
-        'email_verified_at',
-        'created_at',
-        'updated_at',
+    private table_name:string = 'users'
+    
+    columns:KeyVal[] = [
+        new KeyVal().setKey('id').setValue([Type.int, Type.primary_key, Type.auto_increment, " , "]),
+        new KeyVal().setKey('name').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('email').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('password').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('secret_key').setValue([Type.varchar(100), ", "]),
+        new KeyVal().setKey('otpauth_url').setValue([Type.varchar(100), ", "]),
+        new KeyVal().setKey('role_id').setValue([Type.int, Type.not_null, ", "]),
+        new KeyVal().setKey('status_id').setValue([Type.int, Type.not_null, ", "]),
+        new KeyVal().setKey('verify_token').setValue([Type.varchar(100), ", "]),
+        new KeyVal().setKey('otp_verified_at').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('email_verified_at').setValue([Type.varchar(100), Type.not_null, ", "]),
+        new KeyVal().setKey('created_at').setValue([Type.datetime, ", "]),
+        new KeyVal().setKey('updated_at').setValue([Type.datetime])
     ]
     
-    static async migrate() {
-        const m = new MigrationsModel()
-        await (await db).query(`DROP TABLE IF EXISTS ${this.table_name}`);
-        await (await db).query<RowDataPacket[]>(`
-            CREATE TABLE ${this.table_name} (
-            ${this.columns[0]} ${Type.int} ${Type.primary_key} ${Type.auto_increment},
-            ${this.columns[1]} ${Type.varchar(100)} ${Type.not_null},
-            ${this.columns[2]} ${Type.varchar(100)} ${Type.not_null} ,
-            ${this.columns[3]} ${Type.varchar(100)} ${Type.not_null},
-            ${this.columns[4]} ${Type.varchar(100)},
-            ${this.columns[5]} ${Type.varchar()},
-            ${this.columns[6]} ${Type.int} ${Type.not_null},
-            ${this.columns[7]} ${Type.int} ${Type.not_null},
-            ${this.columns[8]} ${Type.varchar(100)} ${Type.not_null},
-            ${this.columns[9]} ${Type.datetime},
-            ${this.columns[10]} ${Type.datetime},
-            ${this.columns[11]} ${Type.datetime},
-            ${this.columns[12]} ${Type.datetime}
-            );
-        `).then(() => {
-            m.set_name(this.table_name)
-                .set_created_at().create()
-            console.log(this.table_name + ' table migration success ✅')
-        }).catch((e) => {
-                console.log(this.table_name + ' table migration failed ❌: ' + e)
-                process.exit(0)
-
-            })
+    get_table_name():string{
+        return this.table_name
     }
+    
+    async migrate() {
+        await new Migration().create_table(this.table_name, this.columns)
+    } 
 }
 

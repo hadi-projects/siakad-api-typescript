@@ -27,12 +27,8 @@ class UserModel extends Model {
 
     constructor() {
         super()
-        super.set_table_name(UserTable.table_name)
-        super.set_columns(UserTable.columns)
+        super.set_table_name(new UserTable().get_table_name())
     }
-
-    // values
-    v: string[] = []
 
     set_id(id: string): UserModel {
         this.id = id
@@ -41,48 +37,40 @@ class UserModel extends Model {
 
     set_name(name: string): UserModel {
         this.name = name;
-        this.v.push(d.escape(name))
         return this
     }
 
     set_email(email: any): UserModel {
         this.email = email;
-        this.v.push(d.escape(email))
         return this
     }
 
     set_password(password: string): UserModel {
         this.password = password;
-        this.v.push(d.escape(password))
         return this
     }
 
     set_role(role: RoleModel): UserModel {
         this.role = role;
-        this.v.push(d.escape(role.get_id()))
         return this
     }
     
     set_status(status: StatusModel): UserModel {
         this.status = status
-        this.v.push(d.escape(status.get_id()))
         return this
     }
 
     set_secret_key(secret_key: string): UserModel {
         this.secret_key = secret_key;
-        this.v.push(d.escape(secret_key))
         return this
     }
     set_otpauth_url(otpauth_url: string): UserModel {
         this.otpauth_url = otpauth_url;
-        this.v.push(d.escape(otpauth_url))
         return this
     }
 
     set_verify_token(verify_token: string): UserModel {
         this.verify_token = verify_token;
-        this.v.push(d.escape(verify_token))
         return this
     }
     set_otp(otp: string): UserModel {
@@ -103,26 +91,22 @@ class UserModel extends Model {
     set_otp_verified_at(): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.otp_verified_at = date;
-        this.v.push(d.escape(date))
         return this
     }
     set_email_verified_at(): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.email_verified_at = date;
-        this.v.push(d.escape(date))
         return this
     }
 
     public set_created_at(dt:string=''): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.created_at = dt==''?date:dt
-        this.v.push(d.escape((date)))
         return this
     }
     public set_updated_at(dt:string=''): UserModel {
         const date = moment().format().replace("T", " ").split("+")[0]
         this.updated_at = dt==''?date:dt
-        this.v.push((d.escape(date)))
         return this
     }
 

@@ -7,7 +7,7 @@ import KeyVal from "./keyval.model";
 export default class MigrationsModel extends Model {
     constructor() {
         super()
-        super.set_table_name(Migrations.table_name)
+        super.set_table_name(new Migrations().get_table_name())
         // super.set_columns(Migrations.columns)
     }
 

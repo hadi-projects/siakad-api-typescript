@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
     "db:migrate": "ts-node src/database/migrations/migrate.ts",
     "db:seed": "ts-node src/database/seeder/seeder.ts",
@@ -40,6 +39,7 @@
     "mysql2": "^3.9.2",
     "node-2fa": "^2.0.3",
     "redis": "^4.6.15",
+    "vscode": "^1.1.37",
     "winston": "^3.11.0"
   }
 }
