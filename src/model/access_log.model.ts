@@ -1,16 +1,13 @@
 import moment from "moment"
-import AccessLogTable from "../database/migrations/07.access_log.migration"
 import AccessModel from "./access.model"
-import Model from "./model"
+import Model from "./meta/model"
 import UserModel from "./user.model"
 import d from 'mysql2'
 
 export default class AccessLogModel extends Model {
 
     constructor() {
-        super()
-        super.set_table_name(AccessLogTable.table_name)
-        super.set_columns(AccessLogTable.columns)
+        super('access_logs')
     }
 
     private ip:string

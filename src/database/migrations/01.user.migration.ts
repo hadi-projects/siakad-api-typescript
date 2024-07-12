@@ -14,8 +14,8 @@ export default class UserTable {
             new KeyVal().setKey('role_id').setValue([Type.int, Type.not_null, ", "]),
             new KeyVal().setKey('status_id').setValue([Type.int, Type.not_null, ", "]),
             new KeyVal().setKey('verify_token').setValue([Type.varchar(100), ", "]),
-            new KeyVal().setKey('otp_verified_at').setValue([Type.varchar(100), Type.not_null, ", "]),
-            new KeyVal().setKey('email_verified_at').setValue([Type.varchar(100), Type.not_null, ", "]),
+            new KeyVal().setKey('otp_verified_at').setValue([Type.varchar(100), ", "]),
+            new KeyVal().setKey('email_verified_at').setValue([Type.varchar(100), ", "]),
             new KeyVal().setKey('created_at').setValue([Type.datetime, ", "]),
             new KeyVal().setKey('updated_at').setValue([Type.datetime])
         ]).migrate()

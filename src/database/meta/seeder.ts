@@ -1,4 +1,4 @@
-import Model from "../../model/model";
+import Model from "../../model/meta/model";
 import db from '../database'
 
 export default class Seeder {

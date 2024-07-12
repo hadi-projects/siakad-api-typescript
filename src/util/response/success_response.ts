@@ -10,7 +10,7 @@ class SuccessReponse {
             code: 2000,
             status: "success",
             message: "login success",
-            data: user
+            data: user,
         })
     }
     static generate2fa(res: Response, user:UserModel) {

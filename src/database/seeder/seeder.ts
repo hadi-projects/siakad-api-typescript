@@ -7,12 +7,12 @@ import PermissionSeeder from "./permission.seeder";
 
 
 async function seed(){
-    await RoleSeeder.seed()
-    await StatusSeeder.seed()
-    await ResourceSeeder.seed()
-    await UserSeeder.seed()
-    await PermissionSeeder.seed()
-    await RoleHasPermissionSeeder.seed()
+    await new RoleSeeder().seed()
+    await new StatusSeeder().seed()
+    await new ResourceSeeder().seed()
+    await new UserSeeder().seed()
+    await new PermissionSeeder().seed()
+    await new RoleHasPermissionSeeder().seed()
     process.exit()
 }
 seed()

@@ -1,13 +1,13 @@
 import moment from "moment"
 import UserTable from "../database/migrations/01.user.migration"
 import Action from "../enum/action.enum"
-import Model from "./model"
+import Model from "./meta/model"
 import RoleModel from "./role.model"
 import StatusModel from "./status.model"
 import d from 'mysql2'
+import KeyVal from "./keyval.model"
 
 class UserModel extends Model {
-    private id!: any
     private name!: any
     private email!: any
     private password!: any
@@ -21,197 +21,146 @@ class UserModel extends Model {
     private otp!: any
     private action: Action
     private jwt_token: object
-    private created_at: any
-    private updated_at: any
 
 
-    constructor() {
-        super()
-        super.set_table_name(new UserTable().get_table_name())
-    }
+    constructor() { super('users') }
 
-    set_id(id: string): UserModel {
-        this.id = id
-        return this
-    }
 
     set_name(name: string): UserModel {
-        this.name = name;
+        this.name = name
+        this.add_values(new KeyVal().setKey('name').setValue(d.escape(name)))
         return this
     }
-
-    set_email(email: any): UserModel {
-        this.email = email;
-        return this
-    }
-
-    set_password(password: string): UserModel {
-        this.password = password;
-        return this
-    }
-
-    set_role(role: RoleModel): UserModel {
-        this.role = role;
-        return this
-    }
-    
-    set_status(status: StatusModel): UserModel {
-        this.status = status
-        return this
-    }
-
-    set_secret_key(secret_key: string): UserModel {
-        this.secret_key = secret_key;
-        return this
-    }
-    set_otpauth_url(otpauth_url: string): UserModel {
-        this.otpauth_url = otpauth_url;
-        return this
-    }
-
-    set_verify_token(verify_token: string): UserModel {
-        this.verify_token = verify_token;
-        return this
-    }
-    set_otp(otp: string): UserModel {
-        this.otp = otp
-        return this
-    }
-
-    set_jwt_token(jwt_token: object) {
-        this.jwt_token = jwt_token
-        return this
-    }
-
-    set_action(action: Action): UserModel {
-        this.action = action
-        return this
-    }
-
-    set_otp_verified_at(): UserModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.otp_verified_at = date;
-        return this
-    }
-    set_email_verified_at(): UserModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.email_verified_at = date;
-        return this
-    }
-
-    public set_created_at(dt:string=''): UserModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.created_at = dt==''?date:dt
-        return this
-    }
-    public set_updated_at(dt:string=''): UserModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.updated_at = dt==''?date:dt
-        return this
-    }
-
-    get_id(): string {
-        return this.id
-    }
-
     get_name(): string {
         return this.name
+    }
+    
+    
+    
+    set_email(email: any): UserModel {
+        this.email = email
+        this.add_values(new KeyVal().setKey('email').setValue(d.escape(email)))
+        return this
     }
     get_email(): string {
         return this.email
     }
+    
+    
+    
+    set_password(password: string): UserModel {
+        this.password = password
+        this.add_values(new KeyVal().setKey('password').setValue(d.escape(password)))
+        return this
+    }
     get_password(): string {
         return this.password
+    }
+
+
+    set_role(role: RoleModel): UserModel {
+        this.role = role
+        this.add_values(new KeyVal().setKey('role_id').setValue(d.escape(role.get_id())))
+        return this
     }
     get_role(): RoleModel {
         return this.role
     }
+    
+    
+    set_status(status: StatusModel): UserModel {
+        this.status = status
+        this.add_values(new KeyVal().setKey('status_id').setValue(d.escape(status.get_id())))
+        return this
+    }
     get_status(): StatusModel {
         return this.status
+    }
+    
+    
+    set_secret_key(secret_key: string): UserModel {
+        this.secret_key = secret_key
+        this.add_values(new KeyVal().setKey('secret_key').setValue(d.escape(secret_key)))
+        return this
     }
     get_secret_key(): string {
         return this.secret_key
     }
+    
+    
+    set_otpauth_url(otpauth_url: string): UserModel {
+        this.otpauth_url = otpauth_url
+        this.add_values(new KeyVal().setKey('otpauth_url').setValue(d.escape(otpauth_url)))
+        return this
+    }
     get_otpauth_url(): string {
         return this.otpauth_url
     }
-    get_otp_verified_at(): string {
-        return this.otp_verified_at
-    }
-
-    get_jwt_token(): object {
-        return this.jwt_token
+    
+    
+    set_verify_token(verify_token: string): UserModel {
+        this.verify_token = verify_token
+        this.add_values(new KeyVal().setKey('verify_token').setValue(d.escape(verify_token)))
+        return this
     }
     get_verify_token(): string {
         return this.verify_token
     }
+    
+    
+    set_otp(otp: string): UserModel {
+        this.otp = otp
+        this.add_values(new KeyVal().setKey('otp').setValue(d.escape(otp)))
+        return this
+    }
     get_otp(): string {
         return this.otp
     }
-
-    get_payload() {
+    
+    
+    set_jwt_token(jwt_token: object) {
+        this.jwt_token = jwt_token
+        this.add_values(new KeyVal().setKey('jwt_token').setValue(d.escape(jwt_token)))
         return this
     }
-
+    get_jwt_token(): object {
+        return this.jwt_token
+    }
+    
+    
+    set_action(action: Action): UserModel {
+        this.action = action
+        this.add_values(new KeyVal().setKey('action').setValue(d.escape(action)))
+        return this
+    }
     get_action() {
         return this.action
     }
-
-    get_createdAt(): string {
-        return this.created_at
-    }
-    get_updatedAt(): string {
-        return this.updated_at
-    }
-
-
-    remove_id(): UserModel {
-        delete this.id
+    
+    
+    
+    set_otp_verified_at(dt:string=""): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.otp_verified_at = dt == "" ? date : null;
+        this.add_values(new KeyVal().setKey('otp_verified_at').setValue(d.escape(this.otp_verified_at)))
         return this
     }
-
-    removeName(): UserModel {
-        delete this.name
+    get_otp_verified_at(): string {
+        return this.otp_verified_at
+    }
+    
+    
+    set_email_verified_at(dt:string=""): UserModel {
+        const date = moment().format().replace("T", " ").split("+")[0]
+        this.email_verified_at = dt == "" ? date : null;
+        this.add_values(new KeyVal().setKey('email_verified_at').setValue(d.escape(this.otp_verified_at)))
         return this
     }
-    removeEmail(): UserModel {
-        delete this.email
-        return this
-    }
-    removePassword(): UserModel {
-        delete this.password
-        return this
-    }
-    removeSecretKey(): UserModel {
-        delete this.secret_key
-        return this
-    }
-    removeOtpauthUrl(): UserModel {
-        delete this.otpauth_url
-        return this
-    }
-    removeOtpVerifiedAt(): UserModel {
-        delete this.otp_verified_at
-        return this
+    get_email_verified_at(): string {
+        return this.email_verified_at
     }
 
-    removeVerifyToken(): UserModel {
-        delete this.verify_token
-        return this
-    }
-    removeOtp(): UserModel {
-        delete this.otp
-        return this
-    }
-
-    removeCreatedAt(): UserModel {
-        delete this.created_at
-        return this
-    }
-    removeUpdatedAt(): UserModel {
-        delete this.updated_at
-        return this
-    }
+    // ====== validation ======
 
     validateLogin(user: UserModel): boolean {
         if (

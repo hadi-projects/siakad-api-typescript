@@ -1,4 +1,4 @@
-import AccessLogMiddleware from "./access_log.middleware";
+// import AccessLogMiddleware from "./access_log.middleware";
 import ApiKeyMiddleware from "./api_key.middleware"
 import express from 'express';
 import PermissionMiddleware from "./permission.middleware";
@@ -11,11 +11,11 @@ export default class Middleware {
         // jwt 
         // permission log
         // access log
-        if (ApiKeyMiddleware.check(req, res) == false) return FailedResponse.tokenFailed(res)
-        if (await PermissionMiddleware.check(req) == false) return FailedResponse.failedPermission(res, '')
-        if (JWTMiddleware.check(req) != '') return FailedResponse.jwtFailed(res, '')
+        // if (ApiKeyMiddleware.check(req, res) == false) return FailedResponse.tokenFailed(res)
+        // if (await PermissionMiddleware.check(req) == false) return FailedResponse.failedPermission(res, '')
+        // if (JWTMiddleware.check(req) != '') return FailedResponse.jwtFailed(res, '')
 
-        AccessLogMiddleware.log(req, res)
+        // AccessLogMiddleware.log(req, res)
 
         next()
 

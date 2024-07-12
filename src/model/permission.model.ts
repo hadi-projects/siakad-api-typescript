@@ -1,31 +1,18 @@
-import Model from "./model";
-import moment from "moment";
+import Model from "./meta/model";
 import d from 'mysql2'
-import PermissionTable from "../database/migrations/06.permission.migration";
+import KeyVal from "./keyval.model";
 
 export default class PermissionsModel extends Model {
-    constructor() {
-        super()
-        super.set_table_name(PermissionTable.table_name)
-        super.set_columns(PermissionTable.columns)
-    }
-
-    // values
-    v: string[] = []
+    private name: string
+    constructor() { super('permissions') }
 
     public set_name(name: string): PermissionsModel {
-        this.v.push(d.escape(name))
-        this.values = this.v
+        this.name = name
+        this.add_values(new KeyVal().setKey('name').setValue(d.escape(name)))
         return this
     }
-    public set_created_at(): PermissionsModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.values.push(d.escape(date))
-        return this
-    }
-    public set_updated_at(): PermissionsModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.values.push(d.escape(date))
-        return this
+
+    public get_name(): string {
+        return this.name;
     }
 }

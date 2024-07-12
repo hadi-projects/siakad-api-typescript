@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import UserRepository from "../../repository/user.repository"
+// import UserRepository from "../../repository/user.repository"
 import UserModel from "../../model/user.model"
 import FailedResponse from "../../util/response/failed_response"
 import SuccessReponse from "../../util/response/success_response"
@@ -14,7 +14,7 @@ export default class OtpController {
     async generate2fa(req: Request, res: Response) {
 
         const user: UserModel = await new UserModel().set_verify_token(req.body['verify_token'])
-            .show() as UserModel
+            // .show() as UserModel
 
         if (user.get_id() == null) return FailedResponse.verifyTokenExpired(res)
         if (user.get_status().get_name() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
@@ -29,7 +29,7 @@ export default class OtpController {
 
             user.set_secret_key(encrypted_secret)
                 .set_otpauth_url(encrypted_uri)
-                .set_status(new StatusModel().set_id("2"))
+                // .set_status(new StatusModel().set_id("2"))
 
         //     const result = await user_repo.edit(user)
         //     if (result == false) return FailedResponse.queryFailed(res, '')
@@ -51,7 +51,7 @@ export default class OtpController {
 
 
     async verify(req: Request, res: Response) {
-        const user_repo = new UserRepository()
+        // const user_repo = new UserRepository()
         let user = new UserModel()
         const response = new UserModel()
 
@@ -71,11 +71,11 @@ export default class OtpController {
 
         // update status 
         user.set_verify_token('')
-        user.set_status(new StatusModel().set_id("3"))
+        // user.set_status(new StatusModel().set_id("3"))
         user.set_otp_verified_at()
 
-        result = await user_repo.edit(user)
-        if (result == false) return FailedResponse.queryFailed(res, '')
+        // result = await user_repo.edit(user)
+        // if (result == false) return FailedResponse.queryFailed(res, '')
 
         response.set_jwt_token(JwtService.generate_jwt(user.get_id()))
 

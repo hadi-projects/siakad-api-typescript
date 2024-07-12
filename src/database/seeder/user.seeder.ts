@@ -1,34 +1,19 @@
-import { RowDataPacket } from 'mysql2/promise'
-import db from '../database'
-import moment from 'moment'
 import UserModel from '../../model/user.model'
-import UserTable from '../migrations/01.user.migration'
 import CryptoUtil from '../../util/crypto.util'
 import RoleModel from '../../model/role.model'
 import StatusModel from '../../model/status.model'
+import Seeder from '../meta/seeder'
 
 export default class UserSeeder {
-    static data:UserModel[] = [
-        new UserModel().setName("hadi")
-            .setEmail("hadi@mail.com")
-            .setPassword(CryptoUtil.hashPassword("Adminsku@12"))
-            .setSecretKey("")
-            .setOtpauthUrl("")
-            .setRole(new RoleModel().set_id("1"))
-            .setStatus(new StatusModel().set_id("1"))
-            .setVerifyToken("")
-            .setOtpVerifiedAt()
-            .setEmailVerifiedAt()
+    async seed(){
+        await new Seeder('users', [
+            new UserModel().set_name("hadi")
+            .set_email("hadi@mail.com")
+            .set_password(CryptoUtil.hashPassword("Adminsku@12"))
+            .set_role(new RoleModel().set_id('1') as RoleModel)
+            .set_status(new StatusModel().set_id("1") as StatusModel)
             .set_created_at()
             .set_updated_at()
-
-    ]
-    
-    static async seed(){
-        await (await db).query(`DELETE FROM ${UserTable.table_name}`)
-        await (await db).query(`ALTER TABLE ${UserTable.table_name} AUTO_INCREMENT = 1`)
-        for(var i=0;i<this.data.length;i++){
-            await this.data[i].create()
-        }
+        ]).seed()
     }
 }

@@ -1,57 +1,20 @@
-import moment from "moment"
-import Model from "./model"
+import Model from "./meta/model"
 import d from 'mysql2'
-import ResourceTable from "../database/migrations/05.resources.migration"
+import KeyVal from "./keyval.model"
 
 export default class ResourceModel extends Model{
 
-    constructor() {
-        super()
-        super.set_table_name(ResourceTable.table_name)
-        super.set_columns(ResourceTable.columns)
-    }
-
-    
-    private id: string
     private name: string 
+    constructor() { super('resources') }
     
-    v: string[] = []
-
-    public get_id(): string {
-        return this.id;
-    }
-
-    public set_id(id: string): ResourceModel {
-        this.id = id;
+    
+    public set_name(name: string): ResourceModel {
+        this.name = name
+        this.add_values(new KeyVal().setKey('name').setValue(d.escape(name)))
         return this
     }
-
+    
     public get_name(): string {
-        return this.name; 
+        return this.name;
     }
-
-    public set_name(name: string):ResourceModel {
-        this.name = name;
-        this.v.push(d.escape(name))
-        return this
-    }
-    
-    public static setRoleModel(id:string, name:string):ResourceModel{
-        const role = new ResourceModel()
-        role.set_id(id)
-        role.set_name(name)
-        return role
-    }
-    
-    public set_created_at(): ResourceModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.v.push(d.escape((date)))
-        return this
-    }
-    public set_updated_at(): ResourceModel {
-        const date = moment().format().replace("T", " ").split("+")[0]
-        this.v.push((d.escape(date)))
-        return this
-    }
-
 }
