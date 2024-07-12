@@ -29,7 +29,7 @@ export default class UserController {
         request.set_password(req.body['password'])
         // request.set_role(RoleModel.setRoleModel(req.body['role_id'], ''))
 
-        if(request.validateCreate(request)==false) return FailedResponse.validationFailed(res)
+        // if(request.validateCreate(request)==false) return FailedResponse.validationFailed(res)
 
         // const result = await user_repo.create(request)
         // if (result != true) return FailedResponse.queryFailed(res, '', result.message)
@@ -42,7 +42,7 @@ export default class UserController {
         // const user_repo =  new UserRepository()
 
         request.set_id(req.body['id'])
-        if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
+        // if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
 
         // const user = await user_repo.show(new KeyVal().setKey('id').setValue(request.get_id()))
         // if (user.get_name() == null) return FailedResponse.queryFailed(res, '', 'result.message')
@@ -62,7 +62,7 @@ export default class UserController {
         //     .set_status(new StatusModel().set_id(req.body['status_id']))
         //     .set_role(RoleModel.setRoleModel(req.body['role_id'], ''))
 
-        if(request.validateEdit(request)==false) return FailedResponse.validationFailed(res)
+        // if(request.validateEdit(request)==false) return FailedResponse.validationFailed(res)
 
         // const result = await user_repo.edit(request)
         // if (result != true) return FailedResponse.queryFailed(res, '', result.message)
@@ -77,7 +77,7 @@ export default class UserController {
 
         request.set_id(req.body['id'])
 
-        if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
+        // if(request.validateId(request)==false) return FailedResponse.validationFailed(res)
 
         // const result = await user_repo.delete(new KeyVal().setKey('id').setValue(request.get_id()))
         // if (result != true) return FailedResponse.queryFailed(res, '', 'result.message')

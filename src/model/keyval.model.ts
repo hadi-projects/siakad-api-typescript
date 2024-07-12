@@ -12,11 +12,6 @@ export default class KeyVal {
         }
         
         public getValue(): string|any {
-            // console.log('===');
-            // console.log(this.value);
-            // console.log(typeof this.value);
-            // console.log();
-            // console.log('===');
             if(this.value === "NULL") return null 
             return this.value;
         }

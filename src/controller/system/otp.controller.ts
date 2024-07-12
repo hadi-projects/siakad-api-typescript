@@ -1,23 +1,24 @@
 import { Request, Response } from "express"
-// import UserRepository from "../../repository/user.repository"
 import UserModel from "../../model/user.model"
 import FailedResponse from "../../util/response/failed_response"
 import SuccessReponse from "../../util/response/success_response"
-import KeyVal from "../../model/keyval.model"
 import CryptoUtil from "../../util/crypto.util"
-import StatusModel from "../../model/status.model"
-import { randomBytes } from "crypto"
 import JwtService from "../../service/jwt.service"
+import KeyVal from "../../model/keyval.model"
 
 export default class OtpController {
 
     async generate2fa(req: Request, res: Response) {
+        if (!new UserModel().validate_empty([req.body['verify_token']]))
+            return FailedResponse.loginFailed(res)
 
-        const user: UserModel = await new UserModel().set_verify_token(req.body['verify_token'])
-            // .show() as UserModel
+        const user: UserModel = new UserModel()
+        user.by(new KeyVal().setKey('verify_token').setValue(req.body['verify_token'])) as UserModel
+        user.show(['id', 'secret_key', 'status_id', 'email'])
+        // console.log(user);
 
         if (user.get_id() == null) return FailedResponse.verifyTokenExpired(res)
-        if (user.get_status().get_name() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
+        // if (user.get_status().get_name() == 'ACTIVE') return FailedResponse.statusFailed(res, '')
 
         // when secret not exist
         // create new one

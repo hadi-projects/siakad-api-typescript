@@ -9,6 +9,7 @@ export default class Model {
     protected table_name: string;
     protected columns: string[]
     public values: Array<KeyVal> = []
+    protected search_by:KeyVal = new KeyVal();
     // 
 
 
@@ -27,6 +28,9 @@ export default class Model {
         else this.values.push(keyval)
     }
 
+
+
+
     // ===== crud =====
 
     async create() {
@@ -43,7 +47,8 @@ export default class Model {
     async show(select:Array<String>=[]): Promise<Model | any> {
         var temp;
         await (await db).query<RowDataPacket[]>(
-            `SELECT ${select.length==0? "*":select} FROM ${this.table_name};`
+            `SELECT ${select.length==0? "*":select} FROM ${this.table_name}
+            WHERE ${this.values[0].getKey()} = ${this.values[0].getValue()};`
         ).then(([d, q]) => {
             temp = d[0];
         }).catch((e) => {
@@ -64,20 +69,14 @@ export default class Model {
     }
 
 
+
+
+
     // ===== getter setter =====
-    private id: string
     private created_at: string
     private updated_at: string
 
-    public set_id(id: string): Model {
-        this.id = id
-        this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))
-        return this
-    }
-
-    public get_id(): string {
-        return this.id;
-    }
+   
 
     public set_created_at(dt: string = ""): Model {
         const date = moment().format().replace("T", " ").split("+")[0]
@@ -112,6 +111,11 @@ export default class Model {
     }
 
     // ===== util =====
+
+    by(keyval:KeyVal):Model{
+        this.search_by = keyval
+        return this
+    }
     
     format_insert(values:KeyVal[]):Array<Array<String>>{
         const temp_column = []
@@ -134,17 +138,5 @@ export default class Model {
         return temp
 
     }
-
-    deleteKeyFromObject = <T extends {}, K extends keyof T>(data: T, key: K) => {
-        const { [key]: _, ...result } = data;
-        return result;
-      }
-
-    remove_values():Model{
-        console.log('==');
-        console.log(this.deleteKeyFromObject(this,'values'))
-        console.log('==');
-        return this
-    } 
 
 }

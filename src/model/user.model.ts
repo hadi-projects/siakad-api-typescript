@@ -8,6 +8,7 @@ import d from 'mysql2'
 import KeyVal from "./keyval.model"
 
 class UserModel extends Model {
+    private id: string
     private name!: any
     private email!: any
     private password!: any
@@ -24,6 +25,16 @@ class UserModel extends Model {
 
 
     constructor() { super('users') }
+
+     public set_id(id: string): Model {
+        this.id = id
+        this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))
+        return this
+    }
+
+    public get_id(): string {
+        return this.id;
+    }
 
 
     set_name(name: string): UserModel {
@@ -58,24 +69,24 @@ class UserModel extends Model {
     }
 
 
-    set_role(role: RoleModel): UserModel {
-        this.role = role
-        this.add_values(new KeyVal().setKey('role_id').setValue(d.escape(role.get_id())))
-        return this
-    }
-    get_role(): RoleModel {
-        return this.role
-    }
+    // set_role(role: RoleModel): UserModel {
+    //     this.role = role
+    //     this.add_values(new KeyVal().setKey('role_id').setValue(d.escape(role.get_id())))
+    //     return this
+    // }
+    // get_role(): RoleModel {
+    //     return this.role
+    // }
     
     
-    set_status(status: StatusModel): UserModel {
-        this.status = status
-        this.add_values(new KeyVal().setKey('status_id').setValue(d.escape(status.get_id())))
-        return this
-    }
-    get_status(): StatusModel {
-        return this.status
-    }
+    // set_status(status: StatusModel): UserModel {
+    //     this.status = status
+    //     this.add_values(new KeyVal().setKey('status_id').setValue(d.escape(status.get_id())))
+    //     return this
+    // }
+    // get_status(): StatusModel {
+    //     return this.status
+    // }
     
     
     set_secret_key(secret_key: string): UserModel {
@@ -191,37 +202,37 @@ class UserModel extends Model {
         }
         return true
     }
-    validateFreeze(user: UserModel): boolean {
-        if (user.get_id() == null || user.get_status() == null) {
-            return false
-        }
-        return true
-    }
+    // validateFreeze(user: UserModel): boolean {
+    //     if (user.get_id() == null || user.get_status() == null) {
+    //         return false
+    //     }
+    //     return true
+    // }
 
-    validateCreate(user: UserModel): boolean {
-        if (user.get_name() == null || user.get_email() == null || user.get_password() == null || user.get_role().get_id() == null) {
-            return false
-        }
-        return true
-    }
+    // validateCreate(user: UserModel): boolean {
+    //     if (user.get_name() == null || user.get_email() == null || user.get_password() == null || user.get_role().get_id() == null) {
+    //         return false
+    //     }
+    //     return true
+    // }
 
-    validateEdit(user: UserModel): boolean {
-        console.log(user)
-        if (user.get_id() == null) {
-            console.log('failed id')
-            return false
-        } else if ((user.get_name() == null && user.get_email() == null && user.get_password() == null && user.get_role().get_id() == null)) {
-            console.log('failed data')
-            return false
-        }
-        return true
-    }
-    validateId(user: UserModel): boolean {
-        if (user.get_id() == null) {
-            return false
-        }
-        return true
-    }
+    // validateEdit(user: UserModel): boolean {
+    //     console.log(user)
+    //     if (user.get_id() == null) {
+    //         console.log('failed id')
+    //         return false
+    //     } else if ((user.get_name() == null && user.get_email() == null && user.get_password() == null && user.get_role().get_id() == null)) {
+    //         console.log('failed data')
+    //         return false
+    //     }
+    //     return true
+    // }
+    // validateId(user: UserModel): boolean {
+    //     if (user.get_id() == null) {
+    //         return false
+    //     }
+    //     return true
+    // }
     validateResetPassword(user: UserModel): boolean {
         if (user.get_id() == null || user.get_password() == null) {
             return false
