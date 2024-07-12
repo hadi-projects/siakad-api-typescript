@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "create:table": "ts-node src/database/migrations/generate_migration.ts",
     "db:migrate": "ts-node src/database/migrations/migrate.ts",
     "db:seed": "ts-node src/database/seeder/seeder.ts",
     "dev": "nodemon src/index.ts",

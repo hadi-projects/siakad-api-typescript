@@ -8,33 +8,33 @@ export default class ForeignTable {
     static async migrate() {
         // user
         await (await db).query<RowDataPacket[]>(`
-            ALTER TABLE ${new UserTable().get_table_name()} 
+            ALTER TABLE ${'users'} 
             ADD FOREIGN KEY (role_id) REFERENCES roles(id);`)
-            .then(() => console.log(new UserTable().get_table_name() + ' table foreign key success ✅'))
-            .catch((e) => console.log(new UserTable().get_table_name() + ' table foreign key failed ❌' + e))
+            .then(() => console.log('users' + ' table foreign key success ✅'))
+            .catch((e) => console.log('users' + ' table foreign key failed ❌' + e))
             
         // role has permissions
         await (await db).query<RowDataPacket[]>(`
-            ALTER TABLE ${new RoleHasPermissionTable().get_table_name()}`)
-            .then(() => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key success ✅'))
-            .catch((e) => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key failed ❌' + e))
+            ALTER TABLE ${'role_has_permissions'}`)
+            .then(() => console.log('role_has_permissions' + ' table foreign key success ✅'))
+            .catch((e) => console.log('role_has_permissions' + ' table foreign key failed ❌' + e))
             
         await (await db).query<RowDataPacket[]>(`
-        ALTER TABLE ${new RoleHasPermissionTable().get_table_name()}
+        ALTER TABLE ${'role_has_permissions'}
             ADD FOREIGN KEY (permission_id) REFERENCES permissions(id);`)
-            .then(() => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key success ✅'))
-            .catch((e) => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key failed ❌' + e))
+            .then(() => console.log('role_has_permissions' + ' table foreign key success ✅'))
+            .catch((e) => console.log('role_has_permissions' + ' table foreign key failed ❌' + e))
 
         await (await db).query<RowDataPacket[]>(`
-        ALTER TABLE ${new RoleHasPermissionTable().get_table_name()}
+        ALTER TABLE ${'role_has_permissions'}
             ADD FOREIGN KEY (role_id) REFERENCES roles(id);`)
-            .then(() => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key success ✅'))
-            .catch((e) => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key failed ❌' + e))
+            .then(() => console.log('role_has_permissions' + ' table foreign key success ✅'))
+            .catch((e) => console.log('role_has_permissions' + ' table foreign key failed ❌' + e))
        
             await (await db).query<RowDataPacket[]>(`
-        ALTER TABLE ${new RoleHasPermissionTable().get_table_name()}
+        ALTER TABLE ${'role_has_permissions'}
             ADD FOREIGN KEY (resource_id) REFERENCES resources(id);`)
-            .then(() => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key success ✅'))
-            .catch((e) => console.log(new RoleHasPermissionTable().get_table_name() + ' table foreign key failed ❌' + e))
+            .then(() => console.log('role_has_permissions' + ' table foreign key success ✅'))
+            .catch((e) => console.log('role_has_permissions' + ' table foreign key failed ❌' + e))
     }
 }

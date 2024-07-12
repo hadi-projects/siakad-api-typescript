@@ -4,9 +4,21 @@ import db from '../database'
 import MigrationsModel from "../../model/migration.model"
 import Logger from "../../service/logger"
 
+
 export default class Migration {
 
-    constructor(){}
+    private table_name:string = ''
+    set_table_name(table_name:string):Migration{
+        this.table_name = table_name
+        return this
+    }
+    get_table_name():string{
+        return this.table_name
+    }
+
+    constructor(){
+        this.table_name
+    }
     
     create_table_format(raw: Array<KeyVal>):string{
         var temp:Array<String>=[]
@@ -28,17 +40,17 @@ export default class Migration {
         await (await db).query("USE " + process.env["DB_DATABASE"])
     }
 
-    async create_table(table_name:string, columns:KeyVal[]){
-        await (await db).query(`DROP TABLE IF EXISTS ${table_name}`);
+    async create_table(columns:KeyVal[]){
+        await (await db).query(`DROP TABLE IF EXISTS ${this.table_name}`);
         await (await db).query<RowDataPacket[]>(`
-            CREATE TABLE ${table_name} ( ${this.create_table_format(columns)} );`)
+            CREATE TABLE ${this.table_name} ( ${this.create_table_format(columns)} );`)
             .then(async () => {
-                await new MigrationsModel().set_name(table_name)
+                await new MigrationsModel().set_name(this.table_name)
                 .set_created_at().create()
-                console.log(table_name + ' table migration success ✅')
+                console.log(this.table_name + ' table migration success ✅')
             })
             .catch((e) => {
-                console.log(table_name + ' table migration failed ❌: ' + e.message)
+                console.log(this.table_name + ' table migration failed ❌: ' + e.message)
                 new Logger().errorLogger().error({ message: e.message, system: "mysql" })
                 process.exit(0)
             })
