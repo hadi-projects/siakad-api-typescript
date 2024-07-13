@@ -3,6 +3,7 @@ import db from '../../database/database'
 import KeyVal from '../keyval.model';
 import moment from 'moment';
 import d from 'mysql2'
+import Logger from '../../service/logger';
 
 
 export default class Model {
@@ -23,13 +24,25 @@ export default class Model {
 
     // ===== crud =====
 
-    async create() {
+    async create():Promise<Object> {
         const data = this.format_insert(this.values)
+        var result = {}
 
         await (await db).query<RowDataPacket[]>(`
             INSERT INTO ${this.table_name} (${[data[0]]}) VALUES (${[data[1]]});
-        `).then((e) => console.log('done: ' + e)).catch((e) => console.log('error: ' + e))
-        console.log('done inserting..');
+        `).then((d) =>
+            {
+                console.log('done inserting data: ' + JSON.stringify(d[0]))
+                result = d['0']
+            }
+        ).catch((e) => 
+            {
+                console.log('error inserting data: ' + JSON.stringify(e))
+                // new Logger().errorLogger.
+                result = e
+            }
+        )
+        return result
 
     }
 
@@ -106,8 +119,12 @@ export default class Model {
         const temp_column = []
         const temp_value = []
         for (var i = 0; i < values.length; i++) {
-            temp_column.push(this.values[i].getKey())
-            temp_value.push(this.values[i].getValue())
+            if(this.values[i].getValue().includes('values')) {
+                continue
+            }else {
+                temp_column.push(this.values[i].getKey())
+                temp_value.push(this.values[i].getValue())
+            }
         }
         return [temp_column, temp_value]
 

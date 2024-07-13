@@ -10,6 +10,7 @@ import KeyVal from '../../model/keyval.model'
 
 export default class AuthController {
     async login(req: Request, res: Response) {
+        
         if (!new UserModel().validate_empty([req.body['email'], req.body['password']]))
             return FailedResponse.validationFailed(res)
 

@@ -1,7 +1,7 @@
 import d from 'mysql2'
 import Keyval from '../../model/keyval.model';
 import moment from 'moment';
-import LogModel from '../../model/access_log.model';
+import LogModel from '../../model/meta/access_log.model';
 
 export default class AccessLogQuery {
     static datetime = moment().format().split("+")[0].replace("T", " ")

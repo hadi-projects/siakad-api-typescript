@@ -1,5 +1,5 @@
-import Action from "../enum/action.enum";
-import Resource from "../enum/resources.enum";
+import Action from "../../enum/action.enum";
+import Resource from "../../enum/resources.enum";
 
 
 export default class AccessModel{
@@ -12,24 +12,27 @@ export default class AccessModel{
         return this.api_version;
     }
 
-    public setApi_version(api_version: string): void {
+    public setApi_version(api_version: string): AccessModel {
         this.api_version = api_version;
+        return this
     }
-
+    
     public getResource(): Resource {
         return this.resource;
     }
-
-    public setResource(resource: Resource): void {
+    
+    public setResource(resource: Resource): AccessModel {
         this.resource = resource;
+        return this
     }
-
+    
     public getAction(): Action {
         return this.action;
     }
-
-    public setAction(action: Action) {
+    
+    public setAction(action: Action):AccessModel {
         this.action = action;
+        return this
     }
 
 

@@ -2,7 +2,7 @@ import winston from 'winston';
 import moment from 'moment';
 
 
-class Logger {
+class LoggerFile{
     accesslLog():winston.Logger{
         const log =  winston.createLogger({
             format: winston.format.json(),
@@ -13,9 +13,9 @@ class Logger {
         })
         return log
     }
-    errorLogger():winston.Logger{
+    systemLogger():winston.Logger{
         const log =  winston.createLogger({
-            defaultMeta: {timestamp:moment().format(), service: "Tennet API - system error"},
+            defaultMeta: {timestamp:moment().format(), service: "Tennet API - system log"},
             format: winston.format.json(),
             transports: [
                 new winston.transports.File({filename:'src/log/error.json'})
@@ -25,5 +25,5 @@ class Logger {
     }
 }
 
-export default Logger;
+export default LoggerFile;
 

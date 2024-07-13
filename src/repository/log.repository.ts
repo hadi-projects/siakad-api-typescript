@@ -1,7 +1,7 @@
 import d from '../database/database'
 import { RowDataPacket } from "mysql2";
 import AccessLogQuery from "../database/query/log.query";
-import LogModel from "../model/access_log.model";
+import LogModel from "../model/meta/access_log.model";
 import Logger from "../service/logger";
 
 export default class LoglRepository {

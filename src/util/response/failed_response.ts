@@ -167,7 +167,7 @@ static dataDuplicate(res: Response, token:string) {
         token: token
     })
 }
-static failedPermission(res: Response, token:string) {
+static failedPermission(res: Response, token:string="") {
     return res.json({
         code: 1019,
         status: "failed",
@@ -237,6 +237,14 @@ static validationFailed(res: Response) {
         code: 1020,
         status: "failed",
         message: "Validate request failed",
+    })
+}
+
+static logFailed(res: Response) {
+    return res.json({
+        code: 1020,
+        status: "failed",
+        message: "access log failed",
     })
 }
 }

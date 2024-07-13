@@ -15,10 +15,10 @@ export default class StatusModel extends Model {
         this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))
         return this
     }
-
     public get_id(): string {
         return this.id;
     }
+
 
     public set_name(name: string): StatusModel {
         this.name = name
@@ -38,7 +38,7 @@ export default class StatusModel extends Model {
     public get_status_key(): string {
         return this.status_key;
     }
-
+    
 
     public set_status_id(status_id: string): StatusModel {
         this.status_id = status_id
