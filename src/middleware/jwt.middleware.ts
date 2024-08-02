@@ -13,17 +13,19 @@ export default class JWTMiddleware {
 
         // check for exception
         if (req.url.includes('auth')) return true
+        if (req.url.includes('otp/generate')) return true
+        if (req.url.includes('otp/verify')) return true
         
         // check for existing
         if (token.includes("Bearer")) return false
 
         // check for exipriraion
-        const user_id = JwtService.extract_data(token.split(" ")[1])
-        console.log(user_id);
-        // set authuser to redis as auth
-        await (await rclient).hSet('auth:user', {
-            name:'auth2'
-        }).then(console.log).catch(console.log)
+        // const user_id = JwtService.extract_data(token.split(" ")[1])
+        // console.log(user_id);
+        // // set authuser to redis as auth
+        // await (await rclient).hSet('auth:user', {
+        //     name:'auth2'
+        // }).then(console.log).catch(console.log)
 
 
 
@@ -31,6 +33,6 @@ export default class JWTMiddleware {
         // get user and store to redis
         // refresh jwt token if needed
 
-        return false
+        return true
     }
 }

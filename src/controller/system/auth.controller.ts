@@ -5,7 +5,6 @@ import CryptoUtil from '../../util/crypto.util'
 import SuccessReponse from '../../util/response/success_response'
 import { randomBytes } from 'crypto'
 import FailedResponse from '../../util/response/failed_response'
-import KeyVal from '../../model/keyval.model'
 
 
 export default class AuthController {
@@ -14,19 +13,29 @@ export default class AuthController {
         if (!new UserModel().validate_empty([req.body['email'], req.body['password']]))
             return FailedResponse.validationFailed(res)
 
-        var user = await new UserModel().set_email(req.body['email']).show(['id', 'password', 'status_id', 'email'])
+        var user = await new UserModel()
+        .add_select(['password', 'status_id'])
+        .add_where('email','=', req.body['email'])
+        .show()
 
+        console.log(user);
+        
+        
         if (!CryptoUtil.comparePassword(req.body["password"], user.password))
             return FailedResponse.loginFailed(res)
-
+        
         if (user.status_id == 4)
-        return FailedResponse.userFreezed(res, '')
-
+            return FailedResponse.userFreezed(res, '')
+        
         new UserModel()
-            .set_verify_token(randomBytes(24).toString('hex'))
-            .update()
-
-        const data = await new UserModel().set_email(req.body['email']).show(['id', 'email', 'status_id', 'verify_token'])
+        .set_verify_token(randomBytes(24).toString('hex'))
+        .add_where('email', '=', req.body['email'])
+        .update()
+        
+        const data = await new UserModel().set_id(user.id)
+        .add_where('email','=', req.body['email'])
+        .add_select(['id', 'status_id', 'email', 'verify_token'])
+        .show()
 
         return SuccessReponse.login(res, data)
     }

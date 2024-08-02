@@ -1,9 +1,9 @@
 import moment from "moment"
-import AccessModel from "./access.model"
-import Model from "./model"
-import UserModel from "../user.model"
+import AccessModel from "./meta/access.model"
+import Model from "./meta/model"
+import UserModel from "./user.model"
 import d from 'mysql2'
-import KeyVal from "../keyval.model"
+import KeyVal from "./keyval.model"
 
 export default class AccessLogModel extends Model {
 
@@ -19,6 +19,11 @@ export default class AccessLogModel extends Model {
 
     constructor() { super('access_logs') }
 
+    public get_properties(): Array<string> {
+        return ['id', 'ip', 'url', 'method', 'endpoint', 'header', 'request_body', 'access', 'user', 'created_at']
+    }
+
+    
     public set_id(id: string): AccessLogModel {
         this.id = id
         this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))

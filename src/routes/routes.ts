@@ -15,6 +15,7 @@ import KHSController from '../controller/mahasiswa/khs.controller';
 import JadwalController from '../controller/mahasiswa/jadwal.controller';
 import UtilController from '../controller/system/util.controller';
 import OtpController from '../controller/system/otp.controller';
+import AccessLogController from '../controller/system/access_log.controller.ts';
 
 const router = express()
 const notification = new NotificationController()
@@ -39,6 +40,8 @@ router.get('/v1/util/ping', util.ping)
 router.post('/v1/otp/generate', otp.generate2fa)
 router.post('/v1/otp/verify', otp.verify)
 router.post('/v1/otp/reset', otp.reset)
+
+router.post('/v1/access-log/index', new AccessLogController().index)
 
 router.get('/v1/notification/index', notification.index)
 router.post('/v1/notification/create', notification.create)

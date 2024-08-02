@@ -7,7 +7,7 @@ import RoleModel from '../model/role.model'
 import JwtService from '../service/jwt.service'
 import KeyVal from '../model/keyval.model'
 import { createClient } from 'redis'
-import AccessLogModel from '../model/meta/access_log.model'
+import AccessLogModel from '../model/access_log.model'
 import Log from '../model/log'
 
 export default class AccessLogMiddleware {

@@ -1,7 +1,8 @@
 import { ResultSetHeader } from "mysql2/promise";
 import LoggerFile from "../service/logger";
-import AccessLogModel from "./meta/access_log.model";
+import AccessLogModel from "./access_log.model";
 import SystemLog from "./meta/system_log";
+import BaseSystemLog from "./meta/base_system_log";
 
 export default class Log {
 
@@ -22,7 +23,7 @@ export default class Log {
     }
 
 
-    async store_system_log(system_log: SystemLog): Promise<boolean> {
+    async store_system_log(system_log: BaseSystemLog): Promise<boolean> {
         const log_mode = process.env["LOG"]
         var result = true
         // store log to database

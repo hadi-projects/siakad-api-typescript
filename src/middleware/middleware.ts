@@ -14,8 +14,8 @@ export default class Middleware {
         if(new ApiKeyMiddleware().check(req) == false)
             return FailedResponse.tokenFailed(res)
 
-        if (await new JWTMiddleware().check(req)==false) 
-            return FailedResponse.jwtFailed(res)
+        // if (await new JWTMiddleware().check(req)==false) 
+        //     return FailedResponse.jwtFailed(res)
         
         if(await new AccessLogMiddleware().log(req))
             return FailedResponse.logFailed(res)
