@@ -6,6 +6,7 @@ import d from 'mysql2'
 import Log from '../log';
 import BaseSystemLog from './base_system_log';
 import PaginationModel from '../pagination.model';
+import { join } from 'path';
 
 
 export default class Model {
@@ -29,7 +30,7 @@ export default class Model {
     private order: Array<string> | any = []
     private pagination: PaginationModel;
     private properties: Array<string> | any = []
-    private likes:string|any=""
+    private likes: string | any = ""
 
     public add_values(keyval: KeyVal) {
         if (keyval.getValue() === null) return
@@ -37,35 +38,38 @@ export default class Model {
     }
 
     // ===== query util =====
-    set_pagination(pagination:PaginationModel): Model {
-        
+    set_pagination(pagination: PaginationModel): Model {
+
         this.pagination = pagination
         return this
     }
-    
-    set_properties(properties:Array<string>): Model {
+
+    set_properties(properties: Array<string>): Model {
         // console.log(this.properties);
         this.properties = properties
         // console.log(this.properties);
         return this
     }
-    
+
+    set_limit(num: number): Model {
+        this.limit = num
+        return this
+    }
+
     get_pagination() {
-        for(var i=0;i<this.properties.length;i++){
+        for (var i = 0; i < this.properties.length; i++) {
             this.likes += ` ${this.properties[i]} LIKE ${this.pagination.get_search()}`
         }
         this.likes += ` `
         return this
     }
-    
+
     add_where(key: string, operation: string, value: string): Model {
         this.wheres.push(`${key} ${operation} ${d.escape(value)}`)
         return this
     }
     add_select(data: Array<string> = []): Model {
-        // if (this.selects.length > 0) {
-            this.selects.push(data.join(" , "))
-        // }
+        this.selects = data.join(" , ")
         return this
     }
     // add_limit(limit: number|any = null): Model {
@@ -100,14 +104,14 @@ export default class Model {
     LIMIT limit
     OFFSET offset
     `
-    
-    
+
+
     async index(select: Array<String> = []): Promise<Model | any> {
         var temp;
         this.where_to_query()
+        console.log(this.selects)
 
-
-        const query = `SELECT ${select.length == 0 ? "*" : select} FROM ${this.table_name} ${this.wheres_query} ${this.order == "" ? "" : " ORDER BY " + d.escape(this.order[0]) + " " + this.order[1]} ${this.limit == 0 ? "" : "LIMIT " + this.limit} ${this.offset == 0 ? "" : "OFFSET " + this.offset};`
+        const query = `SELECT ${this.selects.length == 0 ? "*" : this.selects} FROM ${this.table_name} ${this.order == "" ? "" : " ORDER BY " + d.escape(this.order[0]) + " " + this.order[1]} ${this.limit == 0 ? "" : "LIMIT " + this.limit} ${this.offset == 0 ? "" : "OFFSET " + this.offset};`
 
         console.log(query)
         await (await db).query<RowDataPacket[][]>(query).then(([d, q]) => {
@@ -152,11 +156,11 @@ export default class Model {
         const query = `SELECT ${this.selects.length == 0 ? "*" : this.selects} FROM ${this.table_name}
         ${this.wheres_query};`
         await (await db).query<RowDataPacket[]>(query)
-        .then(([d, q]) => {
-            temp = d[0];
-        }).catch(async (e) => {
-            temp = Error(e);
-        })
+            .then(([d, q]) => {
+                temp = d[0];
+            }).catch(async (e) => {
+                temp = Error(e);
+            })
         return temp;
     }
 
@@ -270,34 +274,34 @@ export default class Model {
     }
 
     where_to_query() {
-        this.wheres_query="WHERE "
-        if(this.wheres.length > 0){
+        this.wheres_query = "WHERE "
+        if (this.wheres.length > 0) {
             this.wheres_query += this.wheres.join(" AND ")
         }
-        if( this.pagination != undefined && this.pagination.get_search() != undefined){
-            if(this.wheres.length == 0){
-                this.wheres_query="WHERE "
-            }else{
-                this.wheres_query+=" AND "
+        if (this.pagination != undefined && this.pagination.get_search() != undefined) {
+            if (this.wheres.length == 0) {
+                this.wheres_query = "WHERE "
+            } else {
+                this.wheres_query += " AND "
             }
-            for(var i=0;i<this.properties.length;i++){
-                var or = this.properties.length-1 == i ? "" : " OR "
+            for (var i = 0; i < this.properties.length; i++) {
+                var or = this.properties.length - 1 == i ? "" : " OR "
                 console.log([
-                    this.properties.length-1,
-                    i,or
+                    this.properties.length - 1,
+                    i, or
                 ])
-                const aa = this.properties[i]+" LIKE '%"+this.pagination.get_search()+"%'" + or
+                const aa = this.properties[i] + " LIKE '%" + this.pagination.get_search() + "%'" + or
                 console.log(aa);
-                
+
                 this.wheres_query += aa
             }
         }
-        if(this.wheres.length == 0 && (this.pagination != undefined && this.pagination.get_search() == undefined)){
-            this.wheres_query=""
+        if (this.wheres.length == 0 && (this.pagination != undefined && this.pagination.get_search() == undefined)) {
+            this.wheres_query = ""
         }
 
         console.log(this.wheres);
         console.log(this.wheres_query);
-        
+
     }
 }

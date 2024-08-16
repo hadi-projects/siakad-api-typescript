@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import Middleware from './middleware/middleware';
-import Routes from './routes/routes';
+import routes from './routes/routes';
 import cors from 'cors'
 dotenv.config();
 
@@ -12,7 +12,7 @@ function main() {
   app.use(cors())
   app.use(express.json())
   app.use(middleware.check);
-  app.use(Routes);
+  app.use(routes);
   app.set('trust proxy', 'loopback')
 
   app.listen(process.env.PORT, () => {

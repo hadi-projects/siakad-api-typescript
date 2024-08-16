@@ -1,8 +1,7 @@
-import {Request, Response} from 'express'
-import InfoResponse from '../../util/response/info_response'
+import InfoResponse from "../../util/response/info_response";
+import { Request, Response } from "express";
 
-
-export default class JurnalController {
+export default class DashboardController {
     async index(req:Request, res:Response): Promise<any> {
         InfoResponse.progress(res)
     }
@@ -12,7 +11,7 @@ export default class JurnalController {
     async show(req:Request, res:Response): Promise<any> {
         InfoResponse.progress(res)
     }
-    async edit(req:Request, res:Response): Promise<any> {
+    async update(req:Request, res:Response): Promise<any> {
         InfoResponse.progress(res)
     }
     async delete(req:Request, res:Response): Promise<any> {

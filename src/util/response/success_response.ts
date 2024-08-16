@@ -43,7 +43,7 @@ class SuccessReponse {
         return res.json({
             code: 2002,
             status: "success",
-            message: "create data success",
+            message: "get data success",
             jwt: jwt_model,
             data: data,
             pagination:{

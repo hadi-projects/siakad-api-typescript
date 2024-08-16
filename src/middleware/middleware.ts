@@ -17,11 +17,11 @@ export default class Middleware {
         // if (await new JWTMiddleware().check(req)==false) 
         //     return FailedResponse.jwtFailed(res)
         
-        if(await new AccessLogMiddleware().log(req))
-            return FailedResponse.logFailed(res)
+        // if(await new AccessLogMiddleware().log(req))
+        //     return FailedResponse.logFailed(res)
         
-        if (await new PermissionMiddleware().check(req)) 
-            return FailedResponse.failedPermission(res)
+        // if (await new PermissionMiddleware().check(req)) 
+        //     return FailedResponse.failedPermission(res)
         
         
         next()
