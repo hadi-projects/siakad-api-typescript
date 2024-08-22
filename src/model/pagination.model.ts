@@ -4,6 +4,8 @@ export default class PaginationModel {
     private limit:number;
     private offset:number;
     private count:number;
+    private len:number;
+    private order:string;
 
     public set_search(search:string):PaginationModel{
         this.search = search
@@ -47,5 +49,23 @@ export default class PaginationModel {
     }
     public get_count(){
         return this.count
+    }
+    
+
+    public set_len(len:number):PaginationModel{
+        this.len = len
+        return this
+    }
+    public get_len(){
+        return this.len
+    }
+   
+   
+    public set_order(order:string):PaginationModel{
+        this.order = order
+        return this
+    }
+    public get_order(){
+        return this.order
     }
 }

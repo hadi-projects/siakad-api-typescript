@@ -14,6 +14,8 @@ export default class CarModel extends Model {
     private asset_symbol:string;
     private volume:string;
 
+    // public columns:string[]=['id','report_date', 'asset_name', 'asset_symbol', 'volume']
+
     public set_id(id: string|any): CarModel {
         this.id = id
         this.add_values(new KeyVal().setKey('id').setValue(d.escape(id)))

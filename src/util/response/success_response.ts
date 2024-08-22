@@ -1,6 +1,7 @@
 import { Response } from "express";
 import UserModel from "../../model/user.model";
 import JwtModel from "../../model/jwt.model";
+import PaginationModel from "../../model/pagination.model";
 
 
 class SuccessReponse {
@@ -76,7 +77,16 @@ class SuccessReponse {
             message: "reset data success",
             jwt: jwt_model,
         })
-    
+    }
+    static indexSuccess(res: Response, jwt_model: JwtModel, data:any, pagination:PaginationModel) {
+        return res.json({
+            code: 2004,
+            status: "success",
+            message: "index data success",
+            jwt: jwt_model,
+            data: data,
+            pagination: pagination
+        })
     }
 }
 
